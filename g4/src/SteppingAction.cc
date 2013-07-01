@@ -46,14 +46,4 @@ SteppingAction::~SteppingAction()
 
 void SteppingAction::UserSteppingAction(const G4Step* step)
 {
-    DetectorConstruction * detector_construction = (DetectorConstruction*)
-        (G4RunManager::GetRunManager()->GetUserDetectorConstruction());
-
-    G4ThreeVector origin = G4ThreeVector(
-            G4UniformRand()*100, G4UniformRand()*100, G4UniformRand()*100);
-    detector_construction->phantom_physical->SetTranslation(origin);
-
-    G4cout << "step " << origin << G4endl;
-    G4RunManager::GetRunManager()->GeometryHasBeenModified();
-
 }
