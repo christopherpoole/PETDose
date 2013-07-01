@@ -41,6 +41,8 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
     particle_gun->SetParticlePosition(G4ThreeVector(0., 0., 0.));
     particle_gun->SetParticleEnergy(6.*MeV);
     particle_gun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
+
+    dicom_reader = new DicomDataIO();
 }
 
 PrimaryGeneratorAction::~PrimaryGeneratorAction()

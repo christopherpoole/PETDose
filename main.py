@@ -25,6 +25,8 @@ import pyublas
 
 
 if __name__ == "__main__":
+    macro, dicom_directory = sys.argv[1:]
+
     detector_construction = g4.DetectorConstruction()
     Geant4.gRunManager.SetUserInitialization(detector_construction)
 
@@ -32,6 +34,7 @@ if __name__ == "__main__":
     Geant4.gRunManager.SetUserInitialization(physics_list)
 
     primary_generator = g4.PrimaryGeneratorAction()
+    primary_generator.LoadActivityData(dicom_directory, 1)
     Geant4.gRunManager.SetUserAction(primary_generator)
 
     stepping_action = g4.SteppingAction()
@@ -39,7 +42,7 @@ if __name__ == "__main__":
 
     Geant4.gRunManager.Initialize()
     Geant4.gVisManager.Initialize()
-    Geant4.gApplyUICommand("/control/execute %s" % sys.argv[1])
+    Geant4.gApplyUICommand("/control/execute %s" % macro)
     Geant4.gRunManager.BeamOn(10)
     #Geant4.StartUISession()
 

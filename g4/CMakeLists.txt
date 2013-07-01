@@ -42,3 +42,5 @@ target_link_libraries(g4 ${Geant4_LIBRARIES})
 target_link_libraries(g4 ${Boost_LIBRARIES})
 target_link_libraries(g4 ${Python_LIBRARIES})
 target_link_libraries(g4 ${G4VOXELDATA_NUMPY_LIBRARIES})
+target_link_libraries(g4 ${G4VOXELDATA_DICOM_LIBRARIES})
+

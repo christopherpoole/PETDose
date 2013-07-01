@@ -56,6 +56,7 @@ BOOST_PYTHON_MODULE(libg4) {
     class_<PrimaryGeneratorAction, PrimaryGeneratorAction*,
         bases<G4VUserPrimaryGeneratorAction>, boost::noncopyable>
         ("PrimaryGeneratorAction", "PrimaryGeneratorAction")
+        .def("LoadActivityData", &PrimaryGeneratorAction::LoadActivityData)
         ;   // End PrimaryGeneratorAction
 }
 

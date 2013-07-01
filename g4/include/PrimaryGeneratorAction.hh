@@ -22,6 +22,12 @@
 #ifndef PrimaryGeneratorAction_h
 #define PrimaryGeneratorAction_h 1
 
+// G4VoxelData
+#include "G4VoxelData.hh"
+#include "G4VoxelArray.hh"
+#include "DicomDataIO.hh"
+
+// GEANT4 //
 #include "G4VUserPrimaryGeneratorAction.hh"
 #include "G4ParticleGun.hh"
 
@@ -30,15 +36,28 @@ class G4Event;
 
 class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 {
-    public:
-        PrimaryGeneratorAction();
-        ~PrimaryGeneratorAction();
+  public:
+    PrimaryGeneratorAction();
+    ~PrimaryGeneratorAction();
 
-    public:
-        void GeneratePrimaries(G4Event* event);
+  public:
+    void GeneratePrimaries(G4Event* event);
+    
+  public:
+    void LoadActivityData(G4String directory, G4int acquisition_number)
+    {
+        dicom_reader->SetAcquisitionNumber(acquisition_number);
+        dicom_reader->SetModality("PT");
 
-    private:
-        G4ParticleGun* particle_gun;
+        G4VoxelData* data = dicom_reader->ReadDirectory(directory);
+        activity = new G4VoxelArray<int16_t>(data);
+    };
+
+  private:
+    G4ParticleGun* particle_gun;
+
+    DicomDataIO* dicom_reader;
+    G4VoxelArray<int16_t>* activity;
 };
 
 #endif
