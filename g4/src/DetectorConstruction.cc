@@ -26,8 +26,8 @@
 #include "globals.hh"
 #include "G4Material.hh"
 #include "G4NistManager.hh"
-
 #include "G4UserLimits.hh"
+
 
 DetectorConstruction::DetectorConstruction()
 {
@@ -53,12 +53,14 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     phantom_physical = new G4PVPlacement(0, G4ThreeVector(), phantom_logical, 
                                          "phantom_physical", world_logical, false, 0);
 
-    detector = new SensitiveDetector("phantom_detector");
+    scorer = new G4VoxelDetector<double>("detector",
+            G4ThreeVector(128, 128, 128), G4ThreeVector(10, 10, 10));
+    //scorer->SetDebug(true);
 
-    G4SDManager* sd_manager = G4SDManager::GetSDMpointer();
-    sd_manager->AddNewDetector(detector);
-    phantom_logical->SetSensitiveDetector(detector);
- 
+    G4SDManager* sensitive_detector_manager = G4SDManager::GetSDMpointer();
+    sensitive_detector_manager->AddNewDetector(scorer);
+    phantom_logical->SetSensitiveDetector(scorer);
+
     return world_physical;
 }
 

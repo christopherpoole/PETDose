@@ -43,5 +43,5 @@ if __name__ == "__main__":
     Geant4.gRunManager.BeamOn(10)
     #Geant4.StartUISession()
 
-    energy = detector_construction.GetEnergyHistogram()
+    detector_construction.SaveEnergyHistogram("energy.npy")
 

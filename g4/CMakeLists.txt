@@ -28,8 +28,8 @@ include(${Geant4_USE_FILE})
 include_directories(${PYTHON_INCLUDE_DIRS})
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
-# bler
-include_directories(/usr/local/lib/python2.7/dist-packages/PyUblas-2011.1-py2.7-linux-x86_64.egg/include)
+# G4VoxelData
+find_package(G4VoxelData)
 
 # User code
 file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cc)
@@ -41,4 +41,4 @@ add_library(g4 "SHARED" libg4.cc ${sources} ${headers})
 target_link_libraries(g4 ${Geant4_LIBRARIES})
 target_link_libraries(g4 ${Boost_LIBRARIES})
 target_link_libraries(g4 ${Python_LIBRARIES})
-
+target_link_libraries(g4 ${G4VOXELDATA_NUMPY_LIBRARIES})

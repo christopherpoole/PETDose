@@ -22,8 +22,10 @@
 #ifndef DetectorConstruction_H
 #define DetectorConstruction_H 1
 
-// USER //
-#include "SensitiveDetector.hh"
+// G4VoxelData //
+#include "G4VoxelData.hh"
+#include "NumpyDataIO.hh"
+#include "G4VoxelDetector.hh"
 
 // GEANT4 //
 #include "G4VUserDetectorConstruction.hh"
@@ -44,12 +46,16 @@ class DetectorConstruction : public G4VUserDetectorConstruction
 
     G4VPhysicalVolume* Construct();
 
-    pyublas::numpy_vector<float> GetEnergyHistogram() {
-        return detector->GetEnergyHistogram();
+    void SaveEnergyHistogram(G4String filename) {
+        io->Write<double>(filename, scorer->GetEnergyHistogram()->GetData());
     }
 
-    pyublas::numpy_vector<float> GetCountsHistogram() {
-        return detector->GetCountsHistogram();
+    void SaveEnergySqHistogram(G4String filename) {
+        io->Write<double>(filename, scorer->GetEnergySqHistogram()->GetData());
+    }
+
+    void SaveCountsHistogram(G4String filename) {
+        io->Write<double>(filename, scorer->GetCountsHistogram()->GetData());
     }
 
   public:
@@ -61,7 +67,8 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     G4LogicalVolume* phantom_logical;
     G4VPhysicalVolume* phantom_physical;
 
-    SensitiveDetector* detector;
+    NumpyDataIO* io;
+    G4VoxelDetector<double>* scorer;
 };
 
 #endif
