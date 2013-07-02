@@ -27,17 +27,19 @@ import pyublas
 if __name__ == "__main__":
     macro = sys.argv[1]
     dicom_directory = sys.argv[2]
-    pet_acquistion = int(sys.argv[3])
-    histories = int(sys.argv[4])
+    pet_acquisition = int(sys.argv[3])
+    ct_acquisition = int(sys.argv[4])
+    histories = int(sys.argv[5])
 
     detector_construction = g4.DetectorConstruction()
+    detector_construction.SetCTDirectory(dicom_directory, ct_acquisition)
     Geant4.gRunManager.SetUserInitialization(detector_construction)
 
     physics_list = g4.PhysicsList()
     Geant4.gRunManager.SetUserInitialization(physics_list)
 
     primary_generator = g4.PrimaryGeneratorAction()
-    primary_generator.LoadActivityData(dicom_directory, pet_acquistion)
+    primary_generator.LoadActivityData(dicom_directory, pet_acquisition)
     Geant4.gRunManager.SetUserAction(primary_generator)
 
     stepping_action = g4.SteppingAction()
