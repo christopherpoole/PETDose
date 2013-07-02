@@ -29,14 +29,19 @@
 
 class PhysicsList: public G4VModularPhysicsList
 {
-    public:
-        PhysicsList();
-        ~PhysicsList();
+  public:
+    PhysicsList();
+    ~PhysicsList();
 
-    protected:
-        void ConstructParticle();
-        void ConstructProcess();
-        void SetCuts();
+  protected:
+    void ConstructParticle();
+    void ConstructProcess();
+    void SetCuts();
+
+  private:
+    G4VPhysicsConstructor* decay_physics;
+    G4VPhysicsConstructor* radioactive_physics;
+    G4VPhysicsConstructor* standard_physics;
 };
 
 #endif
