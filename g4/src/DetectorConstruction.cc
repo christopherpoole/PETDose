@@ -27,6 +27,7 @@
 #include "G4Material.hh"
 #include "G4NistManager.hh"
 #include "G4UserLimits.hh"
+#include "G4VisAttributes.hh"
 
 
 DetectorConstruction::DetectorConstruction()
@@ -43,19 +44,20 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     G4Material* air = nist_manager->FindOrBuildMaterial("G4_AIR");
     G4Material* water = nist_manager->FindOrBuildMaterial("G4_WATER");
 
-    world_solid = new G4Box("world_solid", 1*m, 1*m, 1*m);
+    world_solid = new G4Box("world_solid", 1.5*m, 1.5*m, 1.5*m);
     world_logical = new G4LogicalVolume(world_solid, air, "world_logical", 0, 0, 0);
     world_physical = new G4PVPlacement(0, G4ThreeVector(), world_logical, 
                                        "world_physical", 0, false, 0);
+    //world_logical->SetVisAttributes(G4VisAttributes::Invisible);
  
-    phantom_solid = new G4Box("phantom_solid", 5*cm, 5*cm, 5*cm);
+    phantom_solid = new G4Box("phantom_solid", 1*m, 1*m, 1*m);
     phantom_logical = new G4LogicalVolume(phantom_solid, water, "phantom_logical", 0, 0, 0);
     phantom_physical = new G4PVPlacement(0, G4ThreeVector(), phantom_logical, 
                                          "phantom_physical", world_logical, false, 0);
 
     scorer = new G4VoxelDetector<double>("detector",
-            G4ThreeVector(128, 128, 128), G4ThreeVector(10, 10, 10));
-    //scorer->SetDebug(true);
+            G4ThreeVector(300, 300, 300), G4ThreeVector(10, 10, 10));
+    scorer->SetDebug(false);
 
     G4SDManager* sensitive_detector_manager = G4SDManager::GetSDMpointer();
     sensitive_detector_manager->AddNewDetector(scorer);
