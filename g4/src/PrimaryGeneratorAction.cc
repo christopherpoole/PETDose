@@ -34,9 +34,8 @@
 PrimaryGeneratorAction::PrimaryGeneratorAction()
 {
     particle_gun = new G4ParticleGun();
-
+    particle_gun->SetParticleEnergy(0); // At rest
     G4ParticleTable* particle_table = G4ParticleTable::GetParticleTable();
-    G4ParticleDefinition* particle = particle_table->FindParticle("gamma");
   
     dicom_reader = new DicomDataIO();
 }
@@ -49,15 +48,22 @@ PrimaryGeneratorAction::~PrimaryGeneratorAction()
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
 {
     // Randomly pick a point in the activity dataset
-    position = G4ThreeVector(G4UniformRand() * activity->GetShape()[0],
-        G4UniformRand() * activity->GetShape()[1],
-        G4UniformRand() * activity->GetShape()[2]);
+    unsigned int voxel_x = G4UniformRand() * activity->GetShape()[0];
+    unsigned int voxel_y = G4UniformRand() * activity->GetShape()[1];
+    unsigned int voxel_z = G4UniformRand() * activity->GetShape()[2];
+    G4ThreeVector voxel = G4ThreeVector(voxel_x, voxel_y, voxel_z); 
+ 
+    double position_x = voxel_x * activity->GetSpacing()[0];
+    double position_y = voxel_y * activity->GetSpacing()[1];
+    double position_z = voxel_z * activity->GetSpacing()[2];
+    G4ThreeVector position = G4ThreeVector(position_x, position_y, position_z);
 
     // Test if the activity is high enough to sample. Higher
     // activities will be sampled uniformly more often.
-    double setpoint = activity->GetValue(position) / max_activity;
-    if (setpoint < G4UniformRand()) {
-        G4cout << "Not sampling at " << position << G4endl;
+    double setpoint = activity->GetValue(voxel) / max_activity;
+    double trigger = G4UniformRand();
+
+    if (setpoint < trigger) {
         return;
     }
 
