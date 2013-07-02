@@ -51,13 +51,16 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 
         G4VoxelData* data = dicom_reader->ReadDirectory(directory);
         activity = new G4VoxelArray<int16_t>(data);
+        max_activity = activity->GetMaxValue();
     };
 
   private:
     G4ParticleGun* particle_gun;
+    G4ThreeVector position;
 
     DicomDataIO* dicom_reader;
     G4VoxelArray<int16_t>* activity;
+    double max_activity;
 };
 
 #endif

@@ -24,6 +24,7 @@
 
 // GEANT4 //
 #include "globals.hh"
+#include "Randomize.hh"
 
 #include "G4Event.hh"
 #include "G4ParticleTable.hh"
@@ -37,11 +38,6 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
     G4ParticleTable* particle_table = G4ParticleTable::GetParticleTable();
     G4ParticleDefinition* particle = particle_table->FindParticle("gamma");
   
-    particle_gun->SetParticleDefinition(particle);
-    particle_gun->SetParticlePosition(G4ThreeVector(0., 0., 0.));
-    particle_gun->SetParticleEnergy(6.*MeV);
-    particle_gun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
-
     dicom_reader = new DicomDataIO();
 }
 
@@ -52,7 +48,30 @@ PrimaryGeneratorAction::~PrimaryGeneratorAction()
 
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
 {
+    // Randomly pick a point in the activity dataset
+    position = G4ThreeVector(G4UniformRand() * activity->GetShape()[0],
+        G4UniformRand() * activity->GetShape()[1],
+        G4UniformRand() * activity->GetShape()[2]);
+
+    // Test if the activity is high enough to sample. Higher
+    // activities will be sampled uniformly more often.
+    double setpoint = activity->GetValue(position) / max_activity;
+    if (setpoint < G4UniformRand()) {
+        G4cout << "Not sampling at " << position << G4endl;
+        return;
+    }
+
+    // Fluorine-18
+    G4int Z = 9;
+    G4int A = 18;
+    G4double excitation_energy = 0*keV;
+       
+    G4ParticleDefinition* ion = 
+        G4ParticleTable::GetParticleTable()->GetIon(Z, A, excitation_energy);
+
+    particle_gun->SetParticleDefinition(ion);
+    particle_gun->SetParticleCharge(0*eplus);
+    particle_gun->SetParticlePosition(position);
     particle_gun->GeneratePrimaryVertex(event);
 }
-
 
