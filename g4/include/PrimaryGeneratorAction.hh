@@ -46,7 +46,6 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
   public:
     void LoadActivityData(G4String directory, G4int acquisition_number)
     {
-        dicom_reader->SetAcquisitionNumber(acquisition_number);
         dicom_reader->SetModality("PT");
         dicom_reader->SetSlope(1);
         dicom_reader->SetIntercept(0);
@@ -54,6 +53,7 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
         G4VoxelData* data = dicom_reader->ReadDirectory(directory);
         activity = new G4VoxelArray<int16_t>(data);
         max_activity = activity->GetMaxValue();
+        pet_origin = activity->GetOrigin();
     };
 
   private:
@@ -62,6 +62,7 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
     DicomDataIO* dicom_reader;
     G4VoxelArray<int16_t>* activity;
     double max_activity;
+    G4ThreeVector pet_origin;
 };
 
 #endif
