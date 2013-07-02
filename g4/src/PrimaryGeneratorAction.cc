@@ -53,9 +53,12 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
     unsigned int voxel_z = G4UniformRand() * activity->GetShape()[2];
     G4ThreeVector voxel = G4ThreeVector(voxel_x, voxel_y, voxel_z); 
  
-    double position_x = voxel_x * activity->GetSpacing()[0];
-    double position_y = voxel_y * activity->GetSpacing()[1];
-    double position_z = voxel_z * activity->GetSpacing()[2];
+    double position_x = voxel_x * activity->GetSpacing()[0] - 
+            (activity->GetShape()[0] * activity->GetSpacing()[0])/2.;
+    double position_y = voxel_y * activity->GetSpacing()[1] -
+            (activity->GetShape()[1] * activity->GetSpacing()[1])/2.;
+    double position_z = voxel_z * activity->GetSpacing()[2] -
+            (activity->GetShape()[2] * activity->GetSpacing()[2])/2.;
     G4ThreeVector position = G4ThreeVector(position_x, position_y, position_z);
 
     // Test if the activity is high enough to sample. Higher
@@ -77,7 +80,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
 
     particle_gun->SetParticleDefinition(ion);
     particle_gun->SetParticleCharge(0*eplus);
-    particle_gun->SetParticlePosition(position);
+    particle_gun->SetParticlePosition(position - pet_origin);
     particle_gun->GeneratePrimaryVertex(event);
 }
 

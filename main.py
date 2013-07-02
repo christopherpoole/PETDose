@@ -17,12 +17,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys
+import os
 
 import Geant4
 import g4 
 
-import pyublas
-
+import dicom
 
 if __name__ == "__main__":
     macro = sys.argv[1]
@@ -30,6 +30,12 @@ if __name__ == "__main__":
     pet_acquisition = int(sys.argv[3])
     ct_acquisition = int(sys.argv[4])
     histories = int(sys.argv[5])
+
+    # Find PET registration information
+    registrations = [f for f in os.walk(dicom_directory).next()[2] if f.startswith("REG")]
+    registration = dicom.read_file("%s/%s" % (dicom_directory, registrations[0]))
+    transform = registration.RegistrationSequence[1].MatrixRegistrationSequence[0].MatrixSequence[0].FrameOfReferenceTransformationMatrix
+    offset = Geant4.G4ThreeVector(transform[3], transform[7], transform[11])
 
     detector_construction = g4.DetectorConstruction()
     detector_construction.SetCTDirectory(dicom_directory, ct_acquisition)
@@ -39,7 +45,7 @@ if __name__ == "__main__":
     Geant4.gRunManager.SetUserInitialization(physics_list)
 
     primary_generator = g4.PrimaryGeneratorAction()
-    primary_generator.LoadActivityData(dicom_directory, pet_acquisition)
+    primary_generator.LoadActivityData(dicom_directory, offset)
     Geant4.gRunManager.SetUserAction(primary_generator)
 
     stepping_action = g4.SteppingAction()
