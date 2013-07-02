@@ -48,6 +48,8 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
     {
         dicom_reader->SetAcquisitionNumber(acquisition_number);
         dicom_reader->SetModality("PT");
+        dicom_reader->SetSlope(1);
+        dicom_reader->SetIntercept(0);
 
         G4VoxelData* data = dicom_reader->ReadDirectory(directory);
         activity = new G4VoxelArray<int16_t>(data);
@@ -56,7 +58,6 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 
   private:
     G4ParticleGun* particle_gun;
-    G4ThreeVector position;
 
     DicomDataIO* dicom_reader;
     G4VoxelArray<int16_t>* activity;
