@@ -53,7 +53,7 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
         G4VoxelData* data = dicom_reader->ReadDirectory(directory);
         activity = new G4VoxelArray<int16_t>(data);
         max_activity = activity->GetMaxValue();
-        pet_origin = activity->GetOrigin() - offset;
+        pet_origin = activity->GetOrigin() + offset;
     };
 
   private:
