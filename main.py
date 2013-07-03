@@ -31,12 +31,6 @@ if __name__ == "__main__":
     ct_acquisition = int(sys.argv[4])
     histories = int(sys.argv[5])
 
-    # Find PET registration information
-    registrations = [f for f in os.walk(dicom_directory).next()[2] if f.startswith("REG")]
-    registration = dicom.read_file("%s/%s" % (dicom_directory, registrations[0]))
-    transform = registration.RegistrationSequence[1].MatrixRegistrationSequence[0].MatrixSequence[0].FrameOfReferenceTransformationMatrix
-    offset = Geant4.G4ThreeVector(transform[3], transform[7], transform[11])
-
     detector_construction = g4.DetectorConstruction()
     detector_construction.SetCTDirectory(dicom_directory, ct_acquisition)
     Geant4.gRunManager.SetUserInitialization(detector_construction)
@@ -45,7 +39,7 @@ if __name__ == "__main__":
     Geant4.gRunManager.SetUserInitialization(physics_list)
 
     primary_generator = g4.PrimaryGeneratorAction()
-    primary_generator.LoadActivityData(dicom_directory, offset)
+    primary_generator.LoadActivityData(dicom_directory, Geant4.G4ThreeVector())
     Geant4.gRunManager.SetUserAction(primary_generator)
 
     stepping_action = g4.SteppingAction()
@@ -57,5 +51,5 @@ if __name__ == "__main__":
     Geant4.gRunManager.BeamOn(histories)
     #Geant4.StartUISession()
 
-    detector_construction.SaveEnergyHistogram("energy.npy")
+    #detector_construction.SaveEnergyHistogram("energy.npy")
 
