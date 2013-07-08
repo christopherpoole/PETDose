@@ -55,13 +55,18 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                        "world_physical", 0, false, 0);
     //world_logical->SetVisAttributes(G4VisAttributes::Invisible);
  
+    phantom_solid = new G4Box("phantom_solid", 1.0*m, 1.0*m, 1.0*m);
+    phantom_logical = new G4LogicalVolume(phantom_solid, air, "phantom_logical", 0, 0, 0);
+    phantom_physical = new G4PVPlacement(0, G4ThreeVector(), phantom_logical, 
+                                       "phantom_physical", world_logical, false, 0);
+ 
     // Make a mapping between the data in array and G4Materials
     // at increaments of 25 HU.
     G4int increment = 25;
     std::map<int16_t, G4Material*> materials = MakeMaterialsMap(increment);
 
     G4VoxelDataParameterisation<int16_t>* voxeldata_param =
-        new G4VoxelDataParameterisation<int16_t>(array, materials, world_physical );
+        new G4VoxelDataParameterisation<int16_t>(array, materials, phantom_physical);
 
     G4RotationMatrix* rotation = new G4RotationMatrix();
 
@@ -86,13 +91,15 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         colours[i] = new G4Colour(gray, gray, gray, alpha);
     }
     voxeldata_param->SetColourMap(colours);
+    voxeldata_param->SetVisibility(false);
 
     scorer = new G4VoxelDetector<double>("detector",
-            G4ThreeVector(300, 300, 300), G4ThreeVector(10, 10, 10));
+            G4ThreeVector(201, 201, 201), G4ThreeVector(10*mm, 10*mm, 10*mm));
     scorer->SetDebug(false);
 
     G4SDManager* sensitive_detector_manager = G4SDManager::GetSDMpointer();
     sensitive_detector_manager->AddNewDetector(scorer);
+    phantom_logical->SetSensitiveDetector(scorer);
     voxeldata_param->GetLogicalVolume()->SetSensitiveDetector(scorer);
 
     return world_physical;
