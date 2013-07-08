@@ -49,35 +49,21 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
 {
 
     G4ThreeVector voxel;
-    double setpoint = -1.;
-    unsigned int voxel_x;   
-    unsigned int voxel_y;   
-    unsigned int voxel_z;   
- 
-    // Find a voxel to sample activity from
-    double trigger = G4UniformRand();
-    while (setpoint < trigger) {
-        // Randomly pick a point in the activity dataset
-        voxel_x = G4UniformRand() * activity->GetShape()[0];
-        voxel_y = G4UniformRand() * activity->GetShape()[1];
-        voxel_z = G4UniformRand() * activity->GetShape()[2];
-        voxel = G4ThreeVector(voxel_x, voxel_y, voxel_z); 
-     
-        // Test if the activity is high enough to sample. Higher
-        // activities will be sampled uniformly more often.
-        setpoint = activity->GetValue(voxel) / max_activity;
-    }
     
-    double position_x = voxel_x * activity->GetSpacing()[0] - 
-            (activity->GetShape()[0] * activity->GetSpacing()[0])/2.;
-    double position_y = voxel_y * activity->GetSpacing()[1] -
-            (activity->GetShape()[1] * activity->GetSpacing()[1])/2.;
-    double position_z = voxel_z * activity->GetSpacing()[2] -
-            (activity->GetShape()[2] * activity->GetSpacing()[2])/2.;
-    G4ThreeVector position = G4ThreeVector(position_x, position_y, position_z);
-
-    G4cout << setpoint << " " << trigger << G4endl;
-
+    double setpoint = 0;
+    while(setpoint <= 0) {
+        // Randomly pick a point in the activity dataset
+        voxel = G4ThreeVector(
+            (unsigned int) (G4UniformRand() * activity->GetShape()[0]),
+            (unsigned int) (G4UniformRand() * activity->GetShape()[1]),
+            (unsigned int) (G4UniformRand() * activity->GetShape()[2]));
+     
+        setpoint = activity->GetValue(voxel);
+    }    
+    G4ThreeVector position = activity->GetPosition(voxel);
+   
+    G4cout << position << G4endl;
+ 
     // Fluorine-18
     G4int Z = 9;
     G4int A = 18;
@@ -90,5 +76,8 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
     particle_gun->SetParticleCharge(0*eplus);
     particle_gun->SetParticlePosition(position - pet_origin);
     particle_gun->GeneratePrimaryVertex(event);
+
+    double weight = setpoint / max_activity;
+    event->GetPrimaryVertex()->SetWeight(weight);
 }
 
