@@ -1,12 +1,12 @@
 /vis/verbose 0
 /vis/open OGLIX 600x600-0+50
-/vis/drawVolume
-/vis/scene/add/axes      0 0 0 300 mm
-/vis/modeling/trajectories/create/drawByParticleID
-#/vis/viewer/set/viewpointThetaPhi 60 30
 
+/vis/viewer/set/viewpointThetaPhi 60 30
+/vis/drawVolume
+
+/vis/scene/add/axes      0 0 0 300 mm
+
+/vis/modeling/trajectories/create/drawByParticleID
 /vis/scene/add/trajectories
 /vis/scene/endOfEventAction accumulate
-
-#/run/beamOn 100
 
