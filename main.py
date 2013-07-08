@@ -39,7 +39,7 @@ if __name__ == "__main__":
     Geant4.gRunManager.SetUserInitialization(physics_list)
 
     primary_generator = g4.PrimaryGeneratorAction()
-    primary_generator.LoadActivityData(dicom_directory, Geant4.G4ThreeVector())
+    primary_generator.LoadActivityData(dicom_directory, detector_construction.GetCTOrigin())
     Geant4.gRunManager.SetUserAction(primary_generator)
 
     stepping_action = g4.SteppingAction()
