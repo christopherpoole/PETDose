@@ -53,3 +53,5 @@ if __name__ == "__main__":
 
     #detector_construction.SaveEnergyHistogram("energy.npy")
 
+    raw_input("Press <enter> to exit.")
+
