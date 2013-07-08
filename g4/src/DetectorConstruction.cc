@@ -55,14 +55,6 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                        "world_physical", 0, false, 0);
     //world_logical->SetVisAttributes(G4VisAttributes::Invisible);
  
-    DicomDataIO* reader = new DicomDataIO();
-    reader->SetAcquisitionNumber(ct_acquisition);
-    
-    G4VoxelData* data = reader->ReadDirectory(directory);
-    G4VoxelArray<int16_t>* array = new G4VoxelArray<int16_t>(data);
-
-    array->Merge(4, 4, 4);
-
     // Make a mapping between the data in array and G4Materials
     // at increaments of 25 HU.
     G4int increment = 25;
@@ -72,7 +64,6 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         new G4VoxelDataParameterisation<int16_t>(array, materials, world_physical );
 
     G4RotationMatrix* rotation = new G4RotationMatrix();
-    //rotation->rotateX(90*deg);
 
     voxeldata_param->Construct(array->GetOrigin(), rotation);
     voxeldata_param->SetRounding(25, -1000, 2000);

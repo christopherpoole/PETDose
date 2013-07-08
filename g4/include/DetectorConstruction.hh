@@ -68,6 +68,15 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     void SetCTDirectory(G4String directory, G4int ct_acquistion) {
         this->directory = directory;
         this->ct_acquisition = ct_acquistion;
+
+        DicomDataIO* reader = new DicomDataIO(); 
+        reader->SetAcquisitionNumber(ct_acquisition); 
+         
+        G4VoxelData* data = reader->ReadDirectory(directory); 
+        array = new G4VoxelArray<int16_t>(data);
+        array->Merge(4, 4, 4);
+
+        ct_origin = array->GetOrigin();
     }
 
     void SaveEnergyHistogram(G4String filename) {
@@ -94,6 +103,8 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     NumpyDataIO* io;
     G4VoxelDetector<double>* scorer;
     std::vector<Hounsfield> hounsfield;
+    
+    G4VoxelArray<int16_t>* array;
     
     G4String directory;
     G4int ct_acquisition;
