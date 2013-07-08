@@ -82,6 +82,10 @@ class DetectorConstruction : public G4VUserDetectorConstruction
         io->Write<double>(filename, scorer->GetCountsHistogram()->GetData());
     }
 
+    G4ThreeVector GetCTOrigin() {
+        return this->ct_origin;
+    }
+
   public:
     G4Box* world_solid;
     G4LogicalVolume* world_logical;
@@ -93,6 +97,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     
     G4String directory;
     G4int ct_acquisition;
+    G4ThreeVector ct_origin;
 };
 
 #endif

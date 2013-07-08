@@ -42,6 +42,7 @@ BOOST_PYTHON_MODULE(libg4) {
         .def("SaveEnergyHistogram", &DetectorConstruction::SaveEnergyHistogram)
         .def("SaveCountsHistogram", &DetectorConstruction::SaveCountsHistogram)
         .def("SetCTDirectory", &DetectorConstruction::SetCTDirectory)
+        .def("GetCTOrigin", &DetectorConstruction::GetCTOrigin)
         ;   // End DetectorConstruction
 
     class_<PhysicsList, PhysicsList*,
