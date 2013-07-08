@@ -65,7 +65,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
     G4RotationMatrix* rotation = new G4RotationMatrix();
 
-    voxeldata_param->Construct(array->GetOrigin(), rotation);
+    voxeldata_param->Construct(G4ThreeVector(), rotation);
     voxeldata_param->SetRounding(25, -1000, 2000);
     voxeldata_param->ShowMidPlanes();
     voxeldata_param->ShowZPlanes(15, 0); // every 15th slice
