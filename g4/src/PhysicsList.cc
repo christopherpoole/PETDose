@@ -68,10 +68,10 @@ void PhysicsList::ConstructProcess()
 
 void PhysicsList::SetCuts()
 {
-    //SetCutValue(0.1*mm, "gamma");
-    //SetCutValue(0.01*mm, "e-");
-    //SetCutValue(0.01*mm, "e+");
-
     SetCutsWithDefault();
+    
+    //SetCutValue(5*mm, "gamma");
+    //SetCutValue(5*mm, "e-");
+    //SetCutValue(5*mm, "e+");
 }
 
