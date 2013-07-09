@@ -30,6 +30,7 @@ if __name__ == "__main__":
     pet_acquisition = int(sys.argv[3])
     ct_acquisition = int(sys.argv[4])
     histories = int(sys.argv[5])
+    run_id = int(sys.argv[6])
 
     detector_construction = g4.DetectorConstruction()
     detector_construction.SetCTDirectory(dicom_directory, ct_acquisition)
@@ -51,7 +52,8 @@ if __name__ == "__main__":
     Geant4.gRunManager.BeamOn(histories)
     #Geant4.StartUISession()
 
-    #detector_construction.SaveEnergyHistogram("energy.npy")
+    detector_construction.SaveEnergyHistogram("output/energy_%i.npy" % run_id)
+    detector_construction.SaveCountsHistogram("output/counts_%i.npy" % run_id)
 
-    raw_input("Press <enter> to exit.")
+    #raw_input("Press <enter> to exit.")
 
