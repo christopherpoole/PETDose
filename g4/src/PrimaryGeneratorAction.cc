@@ -51,7 +51,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
     G4ThreeVector voxel;
     
     double setpoint = 0;
-    while(setpoint <= 0) {
+    while(setpoint <= 100) {
         // Randomly pick a point in the activity dataset
         voxel = G4ThreeVector(
             (unsigned int) (G4UniformRand() * activity->GetShape()[0]),
@@ -62,8 +62,6 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
     }    
     G4ThreeVector position = activity->GetPosition(voxel);
    
-    G4cout << position << G4endl;
- 
     // Fluorine-18
     G4int Z = 9;
     G4int A = 18;
