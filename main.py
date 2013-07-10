@@ -34,10 +34,12 @@ if __name__ == "__main__":
     run_id = int(sys.argv[6])
 
     detector_construction = g4.DetectorConstruction()
+    g4.RegisterParallelWorld(detector_construction)
     detector_construction.SetCTDirectory(dicom_directory, ct_acquisition)
     Geant4.gRunManager.SetUserInitialization(detector_construction)
 
     physics_list = g4.PhysicsList()
+    physics_list.RegisterPhysics(g4.StepLimiterBuilder())
     Geant4.gRunManager.SetUserInitialization(physics_list)
 
     primary_generator = g4.PrimaryGeneratorAction()

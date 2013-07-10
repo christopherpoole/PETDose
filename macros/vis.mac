@@ -2,7 +2,7 @@
 /vis/open OGLIX 600x600-0+50
 
 /vis/viewer/set/viewpointThetaPhi 60 30
-/vis/drawVolume
+/vis/drawVolume worlds
 
 /vis/scene/add/axes      0 0 0 300 mm
 

@@ -21,6 +21,7 @@
 
 // USER //
 #include "DetectorConstruction.hh"
+#include "ParallelDetectorConstruction.hh"
 
 // GEANT4 //
 #include "globals.hh"
@@ -59,12 +60,14 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     phantom_logical = new G4LogicalVolume(phantom_solid, air, "phantom_logical", 0, 0, 0);
     phantom_physical = new G4PVPlacement(0, G4ThreeVector(), phantom_logical, 
                                        "phantom_physical", world_logical, false, 0);
+
+    world_logical->SetUserLimits(new G4UserLimits(5*mm));
  
     // Make a mapping between the data in array and G4Materials
     // at increaments of 25 HU.
     G4int increment = 25;
     std::map<int16_t, G4Material*> materials = MakeMaterialsMap(increment);
-
+/*
     G4VoxelDataParameterisation<int16_t>* voxeldata_param =
         new G4VoxelDataParameterisation<int16_t>(array, materials, phantom_physical);
 
@@ -101,7 +104,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     sensitive_detector_manager->AddNewDetector(scorer);
     phantom_logical->SetSensitiveDetector(scorer);
     voxeldata_param->GetLogicalVolume()->SetSensitiveDetector(scorer);
-
+*/
     return world_physical;
 }
 

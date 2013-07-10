@@ -30,7 +30,6 @@
 #include "G4EmDNAPhysics.hh"
 #include "G4EmLivermorePhysics.hh"
 #include "G4EmPenelopePhysics.hh"
-
 #include "G4DecayPhysics.hh"
 #include "G4RadioactiveDecayPhysics.hh"
 
@@ -45,7 +44,7 @@ PhysicsList::PhysicsList()
 
     decay_physics = new G4DecayPhysics();
     radioactive_physics = new G4RadioactiveDecayPhysics();
-    standard_physics = new G4EmStandardPhysics();
+    standard_physics = new G4EmStandardPhysics_option2();
 }
 
 PhysicsList::~PhysicsList()

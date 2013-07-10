@@ -26,6 +26,7 @@
 
 // GEANT4 //
 #include "G4LogicalVolume.hh"
+#include "G4StepLimiterBuilder.hh"
 
 // BOOST/PYTHON //
 #include "boost/python.hpp"
@@ -34,7 +35,16 @@
 
 using namespace boost::python;
 
+
+void RegisterParallelWorld(DetectorConstruction* detector) {
+    ParallelDetectorConstruction* parallel_detector = new ParallelDetectorConstruction();
+    detector->RegisterParallelWorld(parallel_detector);
+    detector->SetParallelWorld(parallel_detector);
+}
+
+
 BOOST_PYTHON_MODULE(libg4) {
+    def("RegisterParallelWorld", RegisterParallelWorld);
 
     class_<DetectorConstruction, DetectorConstruction*,
         bases<G4VUserDetectorConstruction> >
@@ -46,9 +56,14 @@ BOOST_PYTHON_MODULE(libg4) {
         ;   // End DetectorConstruction
 
     class_<PhysicsList, PhysicsList*,
-        bases<G4VUserPhysicsList> >
+        bases<G4VModularPhysicsList> >
         ("PhysicsList", "physics list")
         ;   // End PhysicsList
+
+    class_<G4StepLimiterBuilder, G4StepLimiterBuilder*,
+        bases<G4VPhysicsConstructor>, boost::noncopyable >
+        ("StepLimiterBuilder", "step limit builder")
+        ;   // End G4StepLimiterBuilder
 
     class_<SteppingAction, SteppingAction*,
         bases<G4UserSteppingAction>, boost::noncopyable>

@@ -22,6 +22,9 @@
 #ifndef DetectorConstruction_H
 #define DetectorConstruction_H 1
 
+// USER //
+#include "ParallelDetectorConstruction.hh"
+
 // G4VoxelData //
 #include "G4VoxelData.hh"
 #include "NumpyDataIO.hh"
@@ -65,6 +68,10 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     G4Material* MakeNewMaterial(G4String base_material_name, G4double density);
 
   public:
+    void SetParallelWorld(ParallelDetectorConstruction* parallel_detector) {
+        this->parallel_detector = parallel_detector;
+    };
+
     void SetCTDirectory(G4String directory, G4int ct_acquistion) {
         this->directory = directory;
         this->ct_acquisition = ct_acquistion;
@@ -74,7 +81,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
          
         G4VoxelData* data = reader->ReadDirectory(directory); 
         array = new G4VoxelArray<int16_t>(data);
-
+        
         ct_origin = array->GetOrigin();
     }
 
@@ -95,6 +102,8 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     }
 
   public:
+    ParallelDetectorConstruction* parallel_detector;
+
     G4Box* world_solid;
     G4LogicalVolume* world_logical;
     G4VPhysicalVolume* world_physical;
