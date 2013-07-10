@@ -18,6 +18,7 @@
 
 import sys
 import os
+import random
 
 import Geant4
 import g4 
@@ -45,6 +46,11 @@ if __name__ == "__main__":
 
     stepping_action = g4.SteppingAction()
     Geant4.gRunManager.SetUserAction(stepping_action)
+
+    rand_engine= Geant4.Ranlux64Engine()
+    Geant4.HepRandom.setTheEngine(rand_engine)
+    seed = random.randint(0, 2**32)
+    Geant4.HepRandom.setTheSeed(seed)
 
     Geant4.gRunManager.Initialize()
     Geant4.gVisManager.Initialize()
