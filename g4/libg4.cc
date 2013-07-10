@@ -53,6 +53,8 @@ BOOST_PYTHON_MODULE(libg4) {
     class_<SteppingAction, SteppingAction*,
         bases<G4UserSteppingAction>, boost::noncopyable>
         ("SteppingAction", "SteppingAction")
+        .def("SaveMomentumHistogram", &SteppingAction::SaveMomentumHistogram)
+        .def("SaveStepsHistogram", &SteppingAction::SaveStepsHistogram)
         ;   // End SteppingAction
 
     class_<PrimaryGeneratorAction, PrimaryGeneratorAction*,

@@ -26,6 +26,9 @@
 #include "G4UserSteppingAction.hh"
 #include "G4Step.hh"
 
+#include "G4VoxelArray.hh"
+#include "NumpyDataIO.hh"
+
 
 class SteppingAction : public G4UserSteppingAction
 {
@@ -34,6 +37,26 @@ class SteppingAction : public G4UserSteppingAction
     virtual ~SteppingAction();
 
     virtual void UserSteppingAction(const G4Step* step);
+
+  public:
+    void SaveMomentumHistogram(G4String filename) {
+        io->Write<double>(filename, momentum_histogram->GetData());
+    }
+
+    void SaveStepsHistogram(G4String filename) {
+        io->Write<double>(filename, steps_histogram->GetData());
+    }
+
+  protected:
+    G4bool debug;
+
+    G4ThreeVector shape;
+    G4ThreeVector spacing;
+
+    G4VoxelArray<double>* momentum_histogram;
+    G4VoxelArray<double>* steps_histogram;
+
+    NumpyDataIO* io;
 };
 
 

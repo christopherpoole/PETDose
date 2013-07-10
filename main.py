@@ -55,5 +55,7 @@ if __name__ == "__main__":
     detector_construction.SaveEnergyHistogram("output/energy_%i.npy" % run_id)
     detector_construction.SaveCountsHistogram("output/counts_%i.npy" % run_id)
 
+    stepping_action.SaveMomentumHistogram("output/momentum_%i.npy" % run_id)
+    stepping_action.SaveStepsHistogram("output/steps_%i.npy" % run_id)
     #raw_input("Press <enter> to exit.")
 

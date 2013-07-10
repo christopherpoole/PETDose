@@ -34,16 +34,63 @@
 #include "G4Event.hh"
 #include "G4RunManager.hh"
 
-#include "Randomize.hh"
-
 SteppingAction::SteppingAction()
 {
+    debug = false;
+
+    shape = G4ThreeVector(201, 201, 201);
+    spacing = G4ThreeVector(15*mm, 15*mm, 15*mm);
+
+    momentum_histogram = new G4VoxelArray<double>(shape, spacing);
+    steps_histogram = new G4VoxelArray<double>(shape, spacing);
+
+    io = new NumpyDataIO();
 }
 
 SteppingAction::~SteppingAction()
-{
-}
+{;}
 
-void SteppingAction::UserSteppingAction(const G4Step* step)
+void SteppingAction::UserSteppingAction(const G4Step* aStep)
 {
+    const G4Track* aTrack = aStep->GetTrack();
+    const G4String name = aTrack->GetDefinition()->GetParticleName();
+
+    G4double energy_deposit = aTrack->GetKineticEnergy();
+
+    G4ThreeVector position = aTrack->GetPosition();
+
+    int x_index = std::floor((position.x() + (shape[0]/2. * spacing[0])) / spacing[0]);
+    int y_index = std::floor((position.y() + (shape[1]/2. * spacing[1])) / spacing[1]);
+    int z_index = std::floor((position.z() + (shape[2]/2. * spacing[2])) / spacing[2]);
+
+    if (debug) {
+        G4cout << "Solid name:       " << aTrack->GetVolume()->GetLogicalVolume()->GetName() << G4endl;
+        G4cout << "Total energy:     " << aTrack->GetTotalEnergy() << G4endl;
+        G4cout << "Enegy to deposit: " << energy_deposit << " MeV" << G4endl;
+        G4cout << "Voxel material:   " << aTrack->GetMaterial()->GetName() << G4endl;
+        //G4cout << "Voxel mass:       " << voxel_mass << G4endl;
+        //G4cout << "Voxel volume:     " << volume << G4endl;
+        G4cout << "Position: "
+               << position.x() << " "
+               << position.y() << " "
+               << position.z() << " " << G4endl;
+        G4cout << "Histogram index: "
+               << x_index << " "
+               << y_index << " "
+               << z_index << " " << G4endl;
+        if (x_index != std::abs(x_index)) {
+            G4cout << "Error: X index" << G4endl;
+        }
+        if (y_index != std::abs(y_index)) {
+            G4cout << "Error: Y index" << G4endl;
+        }
+        if (z_index != std::abs(z_index)) {
+            G4cout << "Error: Z index" << G4endl;
+        }
+        G4cout << G4endl; // blank line
+    }
+    
+    momentum_histogram->IncrementValue(energy_deposit, x_index, y_index, z_index);
+    steps_histogram->IncrementValue(aTrack->GetWeight(), x_index, y_index, z_index);
+
 }
