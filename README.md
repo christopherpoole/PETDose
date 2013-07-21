@@ -1,6 +1,6 @@
-# GEANT4 + Python boilerplate
+# PETDose
 
-This project is a simple default setup for building a GEANT4 simulation as Python library.
+Transport radionuclide activity through a CT dataset.
 
 ## Compilation
 
@@ -15,7 +15,7 @@ To do this perform the following:
 
 ## Usage
 
-Edit `g4/src` and `g4/include` so as to describe your desired simulation.
+You will need a DICOM PET/CT:
 
-    python main.py macros/vis.mac
+    python main.py macros/vis.mac <dicom dir> <pet aquisition> <ct aquisition> <histories> <run id>
    
