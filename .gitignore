@@ -4,4 +4,6 @@ run.sh.*
 *.pyc
 *.so
 *.npy
+*.png
+core
 g4/build/*
