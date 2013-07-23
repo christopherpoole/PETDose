@@ -67,7 +67,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     // at increaments of 25 HU.
     G4int increment = 25;
     std::map<int16_t, G4Material*> materials = MakeMaterialsMap(increment);
-/*
+
     G4VoxelDataParameterisation<int16_t>* voxeldata_param =
         new G4VoxelDataParameterisation<int16_t>(array, materials, phantom_physical);
 
@@ -104,7 +104,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     sensitive_detector_manager->AddNewDetector(scorer);
     phantom_logical->SetSensitiveDetector(scorer);
     voxeldata_param->GetLogicalVolume()->SetSensitiveDetector(scorer);
-*/
+
     return world_physical;
 }
 
