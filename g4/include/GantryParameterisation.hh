@@ -58,14 +58,14 @@ public:
     {
         this->mother_physical = mother_physical;
 
-        length = 10*mm;
-        width = 5*mm;
+        length = 100*mm;
+        width = 50*mm;
         
-        crystals_x = 14;
-        crystals_y = 14;
+        crystals_x = 2;
+        crystals_y = 2;
         
-        blocks_x = 4;
-        blocks_y = 4;
+        blocks_x = 2;
+        blocks_y = 2;
 
         heads = 12;
     };
@@ -98,7 +98,7 @@ public:
         // X //
         G4VSolid* x_solid =
             new G4Box("x_solid", width/2.,
-                                 width*crystals_y*blocks_y/2.,
+                                 width/2.,
                                  length/2.);
         x_logical = new G4LogicalVolume(x_solid, air, "x_logical");
         new G4PVReplica("x_replica", x_logical, y_logical,
@@ -111,7 +111,7 @@ public:
                                        length/2.);
         crystal_logical = new G4LogicalVolume(crystal_solid, air, "crystal_logical");
         
-        new G4PVParameterised("heads", crystal_logical, x_logical, kPhi, 1, this);
+        new G4PVParameterised("heads", crystal_logical, x_logical, kUndefined, heads, this);
     };
 
     using G4VNestedParameterisation::ComputeMaterial;
@@ -124,11 +124,11 @@ public:
 
     void ComputeTransformation(const G4int copyNo, G4VPhysicalVolume *physVol) const
     {
-        G4double angle = copyNo * (360/12.)*deg;
+        G4double angle = -copyNo * (360/12.)*deg;
         G4RotationMatrix* rm = new G4RotationMatrix();
         rm->rotateX(angle);
-        
-        physVol->SetRotation(rm);
+        physVol->SetTranslation(G4ThreeVector(0, 500*sin(angle), 500*cos(angle)));
+        //physVol->SetRotation(rm);
     };
 
     using G4VNestedParameterisation::ComputeDimensions;

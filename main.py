@@ -34,7 +34,7 @@ if __name__ == "__main__":
     run_id = int(sys.argv[6])
 
     detector_construction = g4.DetectorConstruction()
-    g4.RegisterParallelWorld(detector_construction)
+    #g4.RegisterParallelWorld(detector_construction)
     detector_construction.SetCTDirectory(dicom_directory, ct_acquisition)
     Geant4.gRunManager.SetUserInitialization(detector_construction)
 
@@ -57,13 +57,13 @@ if __name__ == "__main__":
     Geant4.gRunManager.Initialize()
     Geant4.gVisManager.Initialize()
     Geant4.gApplyUICommand("/control/execute %s" % macro)
-    Geant4.gRunManager.BeamOn(histories)
-    #Geant4.StartUISession()
+    #Geant4.gRunManager.BeamOn(histories)
+    Geant4.StartUISession()
 
-    detector_construction.SaveEnergyHistogram("output/energy_%i.npy" % run_id)
-    detector_construction.SaveCountsHistogram("output/counts_%i.npy" % run_id)
+    #detector_construction.SaveEnergyHistogram("output/energy_%i.npy" % run_id)
+    #detector_construction.SaveCountsHistogram("output/counts_%i.npy" % run_id)
 
-    stepping_action.SaveMomentumHistogram("output/momentum_%i.npy" % run_id)
-    stepping_action.SaveStepsHistogram("output/steps_%i.npy" % run_id)
+    #stepping_action.SaveMomentumHistogram("output/momentum_%i.npy" % run_id)
+    #stepping_action.SaveStepsHistogram("output/steps_%i.npy" % run_id)
     #raw_input("Press <enter> to exit.")
 

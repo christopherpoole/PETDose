@@ -51,19 +51,19 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     G4Material* air = nist_manager->FindOrBuildMaterial("G4_AIR");
     G4Material* water = nist_manager->FindOrBuildMaterial("G4_WATER");
 
-    world_solid = new G4Box("world_solid", 1.5*m, 1.5*m, 1.5*m);
+    world_solid = new G4Box("world_solid", 1.1*m, 1.1*m, 1.1*m);
     world_logical = new G4LogicalVolume(world_solid, air, "world_logical", 0, 0, 0);
     world_physical = new G4PVPlacement(0, G4ThreeVector(), world_logical, 
                                        "world_physical", 0, false, 0);
-    world_logical->SetVisAttributes(G4VisAttributes::Invisible);
+    //world_logical->SetVisAttributes(G4VisAttributes::Invisible);
 
     GantryParameterisation* gantry_param = new GantryParameterisation(world_physical);
     gantry_param->Construct(G4ThreeVector(), 0);
  
-    //phantom_solid = new G4Box("phantom_solid", 1.0*m, 1.0*m, 1.0*m);
-    //phantom_logical = new G4LogicalVolume(phantom_solid, air, "phantom_logical", 0, 0, 0);
-    //phantom_physical = new G4PVPlacement(0, G4ThreeVector(), phantom_logical, 
-    //                                   "phantom_physical", world_logical, false, 0);
+    phantom_solid = new G4Box("phantom_solid", 1.0*m, 1.0*m, 1.0*m);
+    phantom_logical = new G4LogicalVolume(phantom_solid, air, "phantom_logical", 0, 0, 0);
+    phantom_physical = new G4PVPlacement(0, G4ThreeVector(), phantom_logical, 
+                                       "phantom_physical", world_logical, false, 0);
 
     world_logical->SetUserLimits(new G4UserLimits(5*mm));
 
