@@ -57,17 +57,20 @@ public:
     GantryParameterisation(G4VPhysicalVolume* mother_physical)
     {
         this->mother_physical = mother_physical;
+        this->mother_logical = mother_physical->GetLogicalVolume();
+
+        radius = 800*mm;
 
         length = 10*mm;
         width = 5*mm;
         
-        crystals_x = 14;
-        crystals_y = 14;
+        crystals_x = 10;
+        crystals_y = 10;
         
-        blocks_x = 4;
-        blocks_y = 4;
+        blocks_x = 5;
+        blocks_y = 5;
 
-        heads = 12;
+        heads = 10;
     };
 
     virtual ~GantryParameterisation(){
@@ -77,41 +80,34 @@ public:
         G4NistManager* nist_manager = G4NistManager::Instance();
         G4Material* air = nist_manager->FindOrBuildMaterial("G4_AIR");
 
-        G4Box* block_solid =
-            new G4Box("block_solid", width*crystals_x*blocks_x/2.,
-                                         width*crystals_y*blocks_y/2.,
-                                         length/2.);
-        block_logical =
-            new G4LogicalVolume(block_solid, air, "block_logical", 0, 0, 0);
-        new G4PVPlacement(rotation, position,
-            "block_physical", block_logical, mother_physical, 0, false, 0);
+        // Head of rows
+        G4Box* head_solid =
+            new G4Box("head_solid", width*crystals_x*blocks_x/2.,
+                                    width*crystals_y*blocks_y/2.,
+                                    length/2.);
+        head_logical =
+            new G4LogicalVolume(head_solid, air, "head_logical", 0, 0, 0);
 
-        // Y //
-        G4VSolid* y_solid =
-            new G4Box("y_solid", width*crystals_x*blocks_x/2.,
-                                 width/2.,
-                                 length/2.);
-        y_logical = new G4LogicalVolume(y_solid, air, "y_logical");
-        new G4PVReplica("y_replica", y_logical, block_logical,
+        // Row of crystals
+        G4VSolid* row_solid =
+            new G4Box("row_solid", width*crystals_x*blocks_x/2.,
+                                   width/2.,
+                                   length/2.);
+        row_logical = new G4LogicalVolume(row_solid, air, "row_logical");
+        new G4PVReplica("row_replica", row_logical, head_logical,
                         kYAxis, crystals_y*blocks_y, width);
 
-        // X //
-        G4VSolid* x_solid =
-            new G4Box("x_solid", width/2.,
-                                 width*crystals_y*blocks_y/2.,
-                                 length/2.);
-        x_logical = new G4LogicalVolume(x_solid, air, "x_logical");
-        new G4PVReplica("x_replica", x_logical, y_logical,
-                        kXAxis, crystals_x*blocks_x, width);
-
-        // CRYSTAL //
+        // Crystal
         G4VSolid* crystal_solid =
             new G4Box("crystal_solid", width/2.,
                                        width/2.,
                                        length/2.);
         crystal_logical = new G4LogicalVolume(crystal_solid, air, "crystal_logical");
-        
-        new G4PVParameterised("heads", crystal_logical, x_logical, kPhi, 1, this);
+        new G4PVReplica("crystal_replica", crystal_logical, row_logical,
+                        kXAxis, crystals_x*blocks_x, width);
+      
+        // Ring of heads 
+        new G4PVParameterised("heads", head_logical, mother_logical, kPhi, heads, this);
     };
 
     using G4VNestedParameterisation::ComputeMaterial;
@@ -124,10 +120,11 @@ public:
 
     void ComputeTransformation(const G4int copyNo, G4VPhysicalVolume *physVol) const
     {
-        G4double angle = copyNo * (360/12.)*deg;
+        G4double angle = copyNo * (360./heads)*deg;
         G4RotationMatrix* rm = new G4RotationMatrix();
         rm->rotateX(angle);
-        
+
+        physVol->SetTranslation(G4ThreeVector(0, radius*sin(angle), radius*cos(angle)));        
         physVol->SetRotation(rm);
     };
 
@@ -147,11 +144,13 @@ public:
 
   private:
     G4VPhysicalVolume* mother_physical;
+    G4LogicalVolume* mother_logical;
 
-    G4LogicalVolume* block_logical;
-    G4LogicalVolume* x_logical;
-    G4LogicalVolume* y_logical;
+    G4LogicalVolume* head_logical;
+    G4LogicalVolume* row_logical;
     G4LogicalVolume* crystal_logical;
+
+    G4double radius;
 
     G4double length;
     G4double width;
