@@ -62,6 +62,45 @@ class GantryParameterisation : public G4VNestedParameterisation
     G4int GetNumberOfMaterials() const;
     G4Material* GetMaterial(G4int i) const;
 
+  public:
+    void SetRadius(G4double radius) {
+        this->radius = radius;
+    };
+
+    G4double GetRadius() {
+        return this->radius;
+    };
+
+    void SetCrystalLength(G4double length) {
+        this->length = length;
+    };
+
+    G4double GetCrystalLength() {
+        return this->length;
+    };
+
+    void SetCrystalWidth(G4double width) {
+        this->width = width;
+    };
+
+    G4double GetCrystalWidth() {
+        return this->width;
+    };
+
+    void SetNumberOfCrystals(G4int x, G4int y) {
+        this->crystals_x = x;
+        this->crystals_y = y;
+    };
+    
+    void SetNumberOfBlocks(G4int x, G4int y) {
+        this->blocks_x = x;
+        this->blocks_y = y;
+    };
+
+    void SetNumberOfHeads(G4int heads) {
+        this->heads = heads;
+    };
+    
   private:
     G4VPhysicalVolume* mother_physical;
     G4LogicalVolume* mother_logical;
