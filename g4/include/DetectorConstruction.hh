@@ -24,6 +24,7 @@
 
 // USER //
 #include "ParallelDetectorConstruction.hh"
+#include "GantryParameterisation.hh"
 
 // G4VoxelData //
 #include "G4VoxelData.hh"
@@ -112,6 +113,8 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     G4LogicalVolume* phantom_logical;
     G4VPhysicalVolume* phantom_physical;
 
+    GantryParameterisation* gantry_param;
+    
     NumpyDataIO* io;
     G4VoxelDetector<double>* scorer;
     std::vector<Hounsfield> hounsfield;

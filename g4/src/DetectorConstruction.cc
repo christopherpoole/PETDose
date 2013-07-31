@@ -22,7 +22,6 @@
 // USER //
 #include "DetectorConstruction.hh"
 #include "ParallelDetectorConstruction.hh"
-#include "GantryParameterisation.hh"
 
 // GEANT4 //
 #include "globals.hh"
@@ -57,7 +56,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                        "world_physical", 0, false, 0);
     world_logical->SetVisAttributes(G4VisAttributes::Invisible);
 
-    GantryParameterisation* gantry_param = new GantryParameterisation(world_physical);
+    gantry_param = new GantryParameterisation(world_physical);
     gantry_param->Construct(G4ThreeVector(), 0);
  
     //phantom_solid = new G4Box("phantom_solid", 1.0*m, 1.0*m, 1.0*m);
