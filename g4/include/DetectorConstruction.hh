@@ -102,6 +102,32 @@ class DetectorConstruction : public G4VUserDetectorConstruction
         return this->ct_origin;
     }
 
+    void SetRadius(G4double radius) {
+        this->radius = radius;
+    };
+
+    void SetCrystalLength(G4double length) {
+        this->crystal_length = length;
+    };
+
+    void SetCrystalWidth(G4double width) {
+        this->crystal_width = width;
+    };
+
+    void SetNumberOfCrystals(G4int x, G4int y) {
+        this->crystals_x = x;
+        this->crystals_y = y;
+    };
+
+    void SetNumberOfBlocks(G4int x, G4int y) {
+        this->blocks_x = x;
+        this->blocks_y = y;
+    };
+
+    void SetNumberOfHeads(G4int heads) {
+        this->heads = heads;
+    };
+
   public:
     ParallelDetectorConstruction* parallel_detector;
 
@@ -114,7 +140,15 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     G4VPhysicalVolume* phantom_physical;
 
     GantryParameterisation* gantry_param;
-    
+    G4double radius;
+    G4double crystal_length;
+    G4double crystal_width;
+    G4int crystals_x;
+    G4int crystals_y;
+    G4int blocks_x;
+    G4int blocks_y;
+    G4int heads;   
+ 
     NumpyDataIO* io;
     G4VoxelDetector<double>* scorer;
     std::vector<Hounsfield> hounsfield;
