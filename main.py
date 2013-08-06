@@ -36,6 +36,12 @@ if __name__ == "__main__":
     detector_construction = g4.DetectorConstruction()
     g4.RegisterParallelWorld(detector_construction)
     detector_construction.SetCTDirectory(dicom_directory, ct_acquisition)
+    detector_construction.SetRadius(800)
+    detector_construction.SetCrystalWidth(50)
+    detector_construction.SetCrystalLength(50)
+    detector_construction.SetNumberOfCrystals(2, 2)
+    detector_construction.SetNumberOfBlocks(2, 2)
+    detector_construction.SetNumberOfHeads(4)
     Geant4.gRunManager.SetUserInitialization(detector_construction)
 
     physics_list = g4.PhysicsList()

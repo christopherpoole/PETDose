@@ -53,6 +53,14 @@ BOOST_PYTHON_MODULE(libg4) {
         .def("SaveCountsHistogram", &DetectorConstruction::SaveCountsHistogram)
         .def("SetCTDirectory", &DetectorConstruction::SetCTDirectory)
         .def("GetCTOrigin", &DetectorConstruction::GetCTOrigin)
+
+        .def("SetRadius", &DetectorConstruction::SetRadius)
+        .def("SetCrystalLength", &DetectorConstruction::SetCrystalLength)
+        .def("SetCrystalWidth", &DetectorConstruction::SetCrystalWidth)
+        .def("SetNumberOfCrystals", &DetectorConstruction::SetNumberOfCrystals)
+        .def("SetNumberOfBlocks", &DetectorConstruction::SetNumberOfBlocks)
+        .def("SetNumberOfHeads", &DetectorConstruction::SetNumberOfHeads)
+    
         ;   // End DetectorConstruction
 
     class_<PhysicsList, PhysicsList*,
