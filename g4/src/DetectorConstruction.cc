@@ -68,6 +68,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     gantry_param->SetCrystalLength(crystal_length);
     gantry_param->SetCrystalWidth(crystal_width);
     gantry_param->SetNumberOfCrystals(crystals_x, crystals_y);
+    gantry_param->SetNumberOfBlocks(blocks_x, blocks_y);
     gantry_param->SetNumberOfHeads(heads);
     gantry_param->Construct(G4ThreeVector(), 0);
 
