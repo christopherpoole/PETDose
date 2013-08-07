@@ -52,13 +52,29 @@ void SensitiveDetector::Initialize(G4HCofThisEvent*)
 
 G4bool SensitiveDetector::ProcessHits(G4Step* step, G4TouchableHistory* touchable)
 {
+    G4int index0 = ((G4TouchableHistory*)
+        (step->GetPreStepPoint()->GetTouchable()))->GetReplicaNumber(0);
+
+    G4int index1 = ((G4TouchableHistory*)
+        (step->GetPreStepPoint()->GetTouchable()))->GetReplicaNumber(1);
+
+    G4int index2 = ((G4TouchableHistory*)
+        (step->GetPreStepPoint()->GetTouchable()))->GetReplicaNumber(2);
+
+    G4cout << index0 << G4endl;
+    G4cout << " " << index1 << G4endl;
+    G4cout << "  " << index2 << G4endl;
+
     hits += 1;
 }
 
 
 void SensitiveDetector::EndOfEvent(G4HCofThisEvent*)
 {
-    G4cout << hits << G4endl;
+    if (hits > 0) {
+        G4cout << "    " << hits << G4endl << G4endl;
+    }
+    
     hits = 0;
 }
 
