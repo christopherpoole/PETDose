@@ -72,6 +72,12 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     gantry_param->SetNumberOfHeads(heads);
     gantry_param->Construct(G4ThreeVector(), 0);
 
+    sensitive_detector = new SensitiveDetector("crystal_hits");
+
+    G4SDManager* sensitive_detector_manager = G4SDManager::GetSDMpointer();
+    sensitive_detector_manager->AddNewDetector(sensitive_detector);
+    gantry_param->GetLogicalVolume()->SetSensitiveDetector(sensitive_detector);
+
     /* 
     // Make a mapping between the data in array and G4Materials
     // at increaments of 25 HU.

@@ -25,6 +25,7 @@
 // USER //
 #include "ParallelDetectorConstruction.hh"
 #include "GantryParameterisation.hh"
+#include "SensitiveDetector.hh"
 
 // G4VoxelData //
 #include "G4VoxelData.hh"
@@ -148,6 +149,8 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     G4int blocks_x;
     G4int blocks_y;
     G4int heads;   
+
+    SensitiveDetector* sensitive_detector;
  
     NumpyDataIO* io;
     G4VoxelDetector<double>* scorer;
