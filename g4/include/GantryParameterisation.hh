@@ -100,7 +100,11 @@ class GantryParameterisation : public G4VNestedParameterisation
     void SetNumberOfHeads(G4int heads) {
         this->heads = heads;
     };
-    
+   
+    G4LogicalVolume* GetLogicalVolume() {
+        return this->crystal_logical;
+    }
+ 
   private:
     G4VPhysicalVolume* mother_physical;
     G4LogicalVolume* mother_logical;
