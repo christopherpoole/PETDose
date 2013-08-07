@@ -74,5 +74,5 @@ if __name__ == "__main__":
 
     stepping_action.SaveMomentumHistogram("output/momentum_%i.npy" % run_id)
     stepping_action.SaveStepsHistogram("output/steps_%i.npy" % run_id)
-    #raw_input("Press <enter> to exit.")
+    raw_input("Press <enter> to exit.")
 
