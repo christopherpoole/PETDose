@@ -76,7 +76,7 @@ void GantryParameterisation::Construct(G4ThreeVector position, G4RotationMatrix*
                     kXAxis, crystals_x*blocks_x, width);
 
     // Ring of heads 
-    new G4PVParameterised("heads", head_logical, mother_logical, kPhi, heads, this);
+    new G4PVParameterised("heads", head_logical, mother_logical, kUndefined, heads, this);
 }
 
 
