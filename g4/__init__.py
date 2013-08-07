@@ -18,5 +18,6 @@
 
 
 from libg4 import DetectorConstruction, PhysicsList, \
-    PrimaryGeneratorAction, SteppingAction, StepLimiterBuilder, RegisterParallelWorld
+    PrimaryGeneratorAction, EventAction, SteppingAction, \
+    StepLimiterBuilder, RegisterParallelWorld
 

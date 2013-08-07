@@ -21,6 +21,7 @@
 
 #include "DetectorConstruction.hh"
 #include "PhysicsList.hh"
+#include "EventAction.hh"
 #include "SteppingAction.hh"
 #include "PrimaryGeneratorAction.hh"
 
@@ -72,6 +73,11 @@ BOOST_PYTHON_MODULE(libg4) {
         bases<G4VPhysicsConstructor>, boost::noncopyable >
         ("StepLimiterBuilder", "step limit builder")
         ;   // End G4StepLimiterBuilder
+
+    class_<EventAction, EventAction*,
+        bases<G4UserEventAction>, boost::noncopyable>
+        ("EventAction", "EventAction")
+        ;   // End EventAction
 
     class_<SteppingAction, SteppingAction*,
         bases<G4UserSteppingAction>, boost::noncopyable>
