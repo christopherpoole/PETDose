@@ -35,10 +35,10 @@ if __name__ == "__main__":
             help='Set the crystal width.')
     parser.add_argument('--length', type=float, required=True,
             help='Set the crystal length.')
-    parser.add_argument('--crystals', type=int, required=True,
-            help='Set the number of crystals per block.')
-    parser.add_argument('--blocks', type=int, required=True,
-            help='Set the number of blocks per head.')
+    parser.add_argument('--crystals_phi', type=int, required=True,
+            help='Set the number of crystals in the phi direction.')
+    parser.add_argument('--crystals_axis', type=int, required=True,
+            help='Set the number of crystals in the axis direction.')
     parser.add_argument('--heads', type=int, required=True,
             help='Set the number of heads around the gantry.')
 
@@ -63,7 +63,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     detector_construction = g4.DetectorConstruction()
-    g4.RegisterParallelWorld(detector_construction)
+    #g4.RegisterParallelWorld(detector_construction)
 
     if args.dicom:
         detector_construction.SetCTDirectory(args.dicom, args.ct_acquisition)
@@ -72,8 +72,8 @@ if __name__ == "__main__":
     detector_construction.SetRadius(args.radius)
     detector_construction.SetCrystalWidth(args.width)
     detector_construction.SetCrystalLength(args.length)
-    detector_construction.SetNumberOfCrystals(args.crystals, args.crystals)
-    detector_construction.SetNumberOfBlocks(args.blocks, args.blocks)
+    detector_construction.SetNumberOfCrystals(1, args.crystals_phi)
+    detector_construction.SetNumberOfBlocks(args.crystals_axis, 1)
     detector_construction.SetNumberOfHeads(args.heads)
     
     Geant4.gRunManager.SetUserInitialization(detector_construction)
