@@ -19,6 +19,7 @@
 import sys
 import os
 import random
+import argparse
 
 import Geant4
 import g4 
@@ -26,16 +27,29 @@ import g4
 import dicom
 
 if __name__ == "__main__":
-    macro = sys.argv[1]
-    dicom_directory = sys.argv[2]
-    pet_acquisition = int(sys.argv[3])
-    ct_acquisition = int(sys.argv[4])
-    histories = int(sys.argv[5])
-    run_id = int(sys.argv[6])
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument('--dicom', type=str,
+            help='Optional DICOM directory from which to load PET and CT data.')
+    parser.add_argument('--ct_acquisition', type=int,
+            help='Set the CT acquisition to load.')
+    parser.add_argument('--pet_acquisition', type=int,
+            help='Set the PET acquisition to load, -1 for all.')
+
+    parser.add_argument('--histories', type=int, default=0,
+            help='Set the number of initial histories for this run.')
+    parser.add_argument('--run_id', type=int, default=0,
+            help='Set the ID for this run.')
+    parser.add_argument('--start_session', type=bool, default=False,
+            help='Start a GEANT4 session after executing a macro.')
+    parser.add_argument('--macro', type=str,
+            help='Optional GEANT4 run macro, this will override any GPS settings.')
+   
+    args = parser.parse_args()
 
     detector_construction = g4.DetectorConstruction()
     g4.RegisterParallelWorld(detector_construction)
-    detector_construction.SetCTDirectory(dicom_directory, ct_acquisition)
+    detector_construction.SetCTDirectory(args.dicom, args.ct_acquisition)
     detector_construction.SetRadius(800)
     detector_construction.SetCrystalWidth(50)
     detector_construction.SetCrystalLength(50)
@@ -49,7 +63,7 @@ if __name__ == "__main__":
     Geant4.gRunManager.SetUserInitialization(physics_list)
 
     primary_generator = g4.PrimaryGeneratorAction()
-    primary_generator.LoadActivityData(dicom_directory, detector_construction.GetCTOrigin())
+    primary_generator.LoadActivityData(args.dicom, detector_construction.GetCTOrigin())
     Geant4.gRunManager.SetUserAction(primary_generator)
 
     event_action = g4.EventAction()
@@ -65,14 +79,16 @@ if __name__ == "__main__":
 
     Geant4.gRunManager.Initialize()
     Geant4.gVisManager.Initialize()
-    Geant4.gApplyUICommand("/control/execute %s" % macro)
-    Geant4.gRunManager.BeamOn(histories)
-    #Geant4.StartUISession()
+    Geant4.gApplyUICommand("/control/execute %s" % args.macro)
+    Geant4.gRunManager.BeamOn(args.histories)
+    
+    if args.start_session:
+        Geant4.StartUISession()
 
-    detector_construction.SaveEnergyHistogram("output/energy_%i.npy" % run_id)
-    detector_construction.SaveCountsHistogram("output/counts_%i.npy" % run_id)
+    detector_construction.SaveEnergyHistogram("output/energy_%i.npy" % args.run_id)
+    detector_construction.SaveCountsHistogram("output/counts_%i.npy" % args.run_id)
 
-    stepping_action.SaveMomentumHistogram("output/momentum_%i.npy" % run_id)
-    stepping_action.SaveStepsHistogram("output/steps_%i.npy" % run_id)
+    stepping_action.SaveMomentumHistogram("output/momentum_%i.npy" % args.run_id)
+    stepping_action.SaveStepsHistogram("output/steps_%i.npy" % args.run_id)
     raw_input("Press <enter> to exit.")
 
