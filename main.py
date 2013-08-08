@@ -55,6 +55,8 @@ if __name__ == "__main__":
             help='Set the ID for this run.')
     parser.add_argument('--start_session', type=bool, default=False,
             help='Start a GEANT4 session after executing a macro.')
+    parser.add_argument('--save', type=bool, default=False,
+            help='Save results after running.')
     parser.add_argument('--macro', type=str,
             help='Optional GEANT4 run macro, this will override any GPS settings.')
    
@@ -62,13 +64,18 @@ if __name__ == "__main__":
 
     detector_construction = g4.DetectorConstruction()
     g4.RegisterParallelWorld(detector_construction)
-    detector_construction.SetCTDirectory(args.dicom, args.ct_acquisition)
+
+    if args.dicom:
+        detector_construction.SetCTDirectory(args.dicom, args.ct_acquisition)
+
+    # Setup PET gantry.
     detector_construction.SetRadius(args.radius)
     detector_construction.SetCrystalWidth(args.width)
     detector_construction.SetCrystalLength(args.length)
     detector_construction.SetNumberOfCrystals(args.crystals, args.crystals)
     detector_construction.SetNumberOfBlocks(args.blocks, args.blocks)
     detector_construction.SetNumberOfHeads(args.heads)
+    
     Geant4.gRunManager.SetUserInitialization(detector_construction)
 
     physics_list = g4.PhysicsList()
@@ -76,7 +83,8 @@ if __name__ == "__main__":
     Geant4.gRunManager.SetUserInitialization(physics_list)
 
     primary_generator = g4.PrimaryGeneratorAction()
-    primary_generator.LoadActivityData(args.dicom, detector_construction.GetCTOrigin())
+    if args.dicom:
+        primary_generator.LoadActivityData(args.dicom, detector_construction.GetCTOrigin())
     Geant4.gRunManager.SetUserAction(primary_generator)
 
     event_action = g4.EventAction()
@@ -98,10 +106,12 @@ if __name__ == "__main__":
     if args.start_session:
         Geant4.StartUISession()
 
-    detector_construction.SaveEnergyHistogram("output/energy_%i.npy" % args.run_id)
-    detector_construction.SaveCountsHistogram("output/counts_%i.npy" % args.run_id)
+    if args.save:
+        detector_construction.SaveEnergyHistogram("output/energy_%i.npy" % args.run_id)
+        detector_construction.SaveCountsHistogram("output/counts_%i.npy" % args.run_id)
 
-    stepping_action.SaveMomentumHistogram("output/momentum_%i.npy" % args.run_id)
-    stepping_action.SaveStepsHistogram("output/steps_%i.npy" % args.run_id)
+        stepping_action.SaveMomentumHistogram("output/momentum_%i.npy" % args.run_id)
+        stepping_action.SaveStepsHistogram("output/steps_%i.npy" % args.run_id)
+
     raw_input("Press <enter> to exit.")
 
