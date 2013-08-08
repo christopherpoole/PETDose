@@ -29,6 +29,19 @@ import dicom
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
+    parser.add_argument('--radius', type=float, required=True,
+            help='Set the PET gantry radius.')
+    parser.add_argument('--width', type=float, required=True,
+            help='Set the crystal width.')
+    parser.add_argument('--length', type=float, required=True,
+            help='Set the crystal length.')
+    parser.add_argument('--crystals', type=int, required=True,
+            help='Set the number of crystals per block.')
+    parser.add_argument('--blocks', type=int, required=True,
+            help='Set the number of blocks per head.')
+    parser.add_argument('--heads', type=int, required=True,
+            help='Set the number of heads around the gantry.')
+
     parser.add_argument('--dicom', type=str,
             help='Optional DICOM directory from which to load PET and CT data.')
     parser.add_argument('--ct_acquisition', type=int,
@@ -50,12 +63,12 @@ if __name__ == "__main__":
     detector_construction = g4.DetectorConstruction()
     g4.RegisterParallelWorld(detector_construction)
     detector_construction.SetCTDirectory(args.dicom, args.ct_acquisition)
-    detector_construction.SetRadius(800)
-    detector_construction.SetCrystalWidth(50)
-    detector_construction.SetCrystalLength(50)
-    detector_construction.SetNumberOfCrystals(2, 2)
-    detector_construction.SetNumberOfBlocks(2, 2)
-    detector_construction.SetNumberOfHeads(4)
+    detector_construction.SetRadius(args.radius)
+    detector_construction.SetCrystalWidth(args.width)
+    detector_construction.SetCrystalLength(args.length)
+    detector_construction.SetNumberOfCrystals(args.crystals, args.crystals)
+    detector_construction.SetNumberOfBlocks(args.blocks, args.blocks)
+    detector_construction.SetNumberOfHeads(args.heads)
     Geant4.gRunManager.SetUserInitialization(detector_construction)
 
     physics_list = g4.PhysicsList()
