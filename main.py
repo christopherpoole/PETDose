@@ -44,9 +44,9 @@ if __name__ == "__main__":
 
     parser.add_argument('--dicom', type=str,
             help='Optional DICOM directory from which to load PET and CT data.')
-    parser.add_argument('--ct_acquisition', type=int,
+    parser.add_argument('--ct_acquisition', type=int, default=-1,
             help='Set the CT acquisition to load.')
-    parser.add_argument('--pet_acquisition', type=int,
+    parser.add_argument('--pet_acquisition', type=int, default=-1,
             help='Set the PET acquisition to load, -1 for all.')
 
     parser.add_argument('--histories', type=int, default=0,
