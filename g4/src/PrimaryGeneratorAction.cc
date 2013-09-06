@@ -48,6 +48,8 @@ PrimaryGeneratorAction::~PrimaryGeneratorAction()
 
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
 {
+    G4cout << "event" << G4endl;
+
     if (activity) {
         GeneratePrimariesFromActivity(event);
     } else {

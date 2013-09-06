@@ -100,8 +100,11 @@ if __name__ == "__main__":
     Geant4.HepRandom.setTheSeed(seed)
 
     Geant4.gRunManager.Initialize()
-    Geant4.gVisManager.Initialize()
-    Geant4.gApplyUICommand("/control/execute %s" % args.macro)
+    
+    if args.macro:
+        Geant4.gVisManager.Initialize()
+        Geant4.gApplyUICommand("/control/execute %s" % args.macro)
+
     Geant4.gRunManager.BeamOn(args.histories)
     
     if args.start_session:

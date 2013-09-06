@@ -53,6 +53,9 @@ class SensitiveDetector : public G4VSensitiveDetector {
 
   public:
     G4int hits;
+
+    std::vector<double>* primaries;
+    std::vector<double>* secondaries;
 };
 
 #endif	// SENSITIVEDETECTOR_HH

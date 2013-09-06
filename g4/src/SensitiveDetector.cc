@@ -37,6 +37,9 @@ SensitiveDetector::SensitiveDetector(const G4String& name)
         : G4VSensitiveDetector(name)
 {
     hits = 0;
+
+    primaries = new std::vector<double>();
+    secondaries = new std::vector<double>();
 }
 
 
@@ -61,19 +64,31 @@ G4bool SensitiveDetector::ProcessHits(G4Step* step, G4TouchableHistory* touchabl
     G4int index2 = ((G4TouchableHistory*)
         (step->GetPreStepPoint()->GetTouchable()))->GetReplicaNumber(2);
 
-    G4cout << index0 << G4endl;
-    G4cout << " " << index1 << G4endl;
-    G4cout << "  " << index2 << G4endl;
+    //G4cout << index0 << G4endl;
+    //G4cout << " " << index1 << G4endl;
+    //G4cout << "  " << index2 << G4endl;
 
+    double energy = step->GetTrack()->GetKineticEnergy();
+    unsigned int id = step->GetTrack()->GetParentID();
+    if (id == 0) {
+        primaries->push_back(energy);
+    } else {
+        secondaries->push_back(energy);
+    }
+
+    G4cout << id << " " << energy << G4endl;
+        
     hits += 1;
+
+    return true;
 }
 
 
 void SensitiveDetector::EndOfEvent(G4HCofThisEvent*)
 {
-    if (hits > 0) {
-        G4cout << "    " << hits << G4endl << G4endl;
-    }
+    //if (hits > 0) {
+    //    G4cout << "    " << hits << G4endl << G4endl;
+    //}
     
     hits = 0;
 }
