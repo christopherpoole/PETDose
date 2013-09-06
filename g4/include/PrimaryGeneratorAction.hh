@@ -31,6 +31,7 @@
 #include "G4VUserPrimaryGeneratorAction.hh"
 #include "G4ParticleGun.hh"
 
+
 class G4GeneralParticleSource;
 class G4Event;
 
@@ -42,6 +43,7 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 
   public:
     void GeneratePrimaries(G4Event* event);
+    void GeneratePrimariesFromActivity(G4Event* event);
     
   public:
     void LoadActivityData(G4String directory, G4ThreeVector offset)

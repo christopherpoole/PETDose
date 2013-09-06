@@ -48,7 +48,15 @@ PrimaryGeneratorAction::~PrimaryGeneratorAction()
 
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
 {
+    if (activity) {
+        GeneratePrimariesFromActivity(event);
+    } else {
+        particle_gun->GeneratePrimaryVertex(event);
+    }
+    
+}
 
+void PrimaryGeneratorAction::GeneratePrimariesFromActivity(G4Event* event)
     G4ThreeVector voxel;
     
     double setpoint = 0;
