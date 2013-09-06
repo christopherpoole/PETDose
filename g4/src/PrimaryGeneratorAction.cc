@@ -38,6 +38,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
     G4ParticleTable* particle_table = G4ParticleTable::GetParticleTable();
   
     dicom_reader = new DicomDataIO();
+    activity = NULL;
 }
 
 PrimaryGeneratorAction::~PrimaryGeneratorAction()
