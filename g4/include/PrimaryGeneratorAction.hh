@@ -45,6 +45,7 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
   public:
     void GeneratePrimaries(G4Event* event);
     void GeneratePrimariesFromActivity(G4Event* event);
+    void ConstructIon();
     
   public:
     void LoadActivityData(G4String directory, G4ThreeVector offset)
@@ -59,8 +60,8 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
         pet_origin = activity->GetOrigin() - offset;
     };
 
-    void SetGunPosition(G4ThreeVector position) {
-        particle_gun->SetParticlePosition(position);
+    void SetGunPosition(double x, double y, double z) {
+        particle_gun->SetParticlePosition(G4ThreeVector(x, y, z));
     };
 
   private:

@@ -51,6 +51,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* event)
     if (activity) {
         GeneratePrimariesFromActivity(event);
     } else {
+        ConstructIon();
         particle_gun->GeneratePrimaryVertex(event);
     }
 }
@@ -70,7 +71,17 @@ void PrimaryGeneratorAction::GeneratePrimariesFromActivity(G4Event* event)
         setpoint = activity->GetValue(voxel);
     }    
     G4ThreeVector position = activity->GetPosition(voxel);
-   
+    particle_gun->SetParticlePosition(position - pet_origin);
+
+    ConstructIon();
+
+    particle_gun->GeneratePrimaryVertex(event);
+
+    double weight = setpoint / max_activity;
+    event->GetPrimaryVertex()->SetWeight(weight);
+}
+
+void PrimaryGeneratorAction::ConstructIon() {
     // Fluorine-18
     G4int Z = 9;
     G4int A = 18;
@@ -81,10 +92,5 @@ void PrimaryGeneratorAction::GeneratePrimariesFromActivity(G4Event* event)
 
     particle_gun->SetParticleDefinition(ion);
     particle_gun->SetParticleCharge(0*eplus);
-    particle_gun->SetParticlePosition(position - pet_origin);
-    particle_gun->GeneratePrimaryVertex(event);
-
-    double weight = setpoint / max_activity;
-    event->GetPrimaryVertex()->SetWeight(weight);
 }
 

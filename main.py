@@ -83,6 +83,7 @@ if __name__ == "__main__":
     Geant4.gRunManager.SetUserInitialization(physics_list)
 
     primary_generator = g4.PrimaryGeneratorAction()
+    primary_generator.SetGunPosition(0, 0, 0);
     if args.dicom:
         primary_generator.LoadActivityData(args.dicom, detector_construction.GetCTOrigin())
     Geant4.gRunManager.SetUserAction(primary_generator)
