@@ -29,6 +29,7 @@
 #include "G4NistManager.hh"
 #include "G4UserLimits.hh"
 #include "G4VisAttributes.hh"
+#include "G4Tubs.hh"
 
 
 DetectorConstruction::DetectorConstruction()
@@ -62,7 +63,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     phantom_logical = new G4LogicalVolume(phantom_solid, air, "phantom_logical", 0, 0, 0);
     phantom_physical = new G4PVPlacement(0, G4ThreeVector(), phantom_logical, 
                                        "phantom_physical", world_logical, false, 0);
-
+    
     gantry_param = new GantryParameterisation(phantom_physical);
     gantry_param->SetRadius(radius);
     gantry_param->SetCrystalLength(crystal_length);
@@ -78,7 +79,6 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     sensitive_detector_manager->AddNewDetector(sensitive_detector);
     gantry_param->GetLogicalVolume()->SetSensitiveDetector(sensitive_detector);
 
-    /* 
     // Make a mapping between the data in array and G4Materials
     // at increaments of 25 HU.
     G4int increment = 25;
@@ -93,7 +93,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     voxeldata_param->SetRounding(25, -1000, 2000);
     voxeldata_param->ShowMidPlanes();
     voxeldata_param->ShowZPlanes(15, 0); // every 15th slice
-
+    /*
     std::map<int16_t, G4Colour*> colours;
     for (int i=-2500; i<5000; i++) {
         double gray = (double) (i + 2500) / 7500.;

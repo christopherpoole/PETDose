@@ -38,6 +38,9 @@ class DetectorConstruction;
 // STL //
 #include <vector>
 
+// PyUBLAS
+#include "pyublas/numpy.hpp"
+
 
 class SensitiveDetector : public G4VSensitiveDetector {
   public:
@@ -52,10 +55,22 @@ class SensitiveDetector : public G4VSensitiveDetector {
     void PrintAll();
 
   public:
+    G4int GetHitCount() {
+        return hits;
+    };
+
+    void ZeroHistogram() {
+        std::fill(energy.begin(), energy.end(), 0.0);
+    };
+
+    pyublas::numpy_vector<float> GetHistogram() {
+        return this->energy;
+    };
+
+  public:
     G4int hits;
 
-    std::vector<double>* primaries;
-    std::vector<double>* secondaries;
+    pyublas::numpy_vector<float> energy;
 };
 
 #endif	// SENSITIVEDETECTOR_HH

@@ -61,7 +61,9 @@ BOOST_PYTHON_MODULE(libg4) {
         .def("SetNumberOfCrystals", &DetectorConstruction::SetNumberOfCrystals)
         .def("SetNumberOfBlocks", &DetectorConstruction::SetNumberOfBlocks)
         .def("SetNumberOfHeads", &DetectorConstruction::SetNumberOfHeads)
-    
+
+        .def("GetHistogram", &DetectorConstruction::GetHistogram)    
+        .def("ZeroHistogram", &DetectorConstruction::ZeroHistogram)    
         ;   // End DetectorConstruction
 
     class_<PhysicsList, PhysicsList*,

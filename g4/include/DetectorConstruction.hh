@@ -129,6 +129,14 @@ class DetectorConstruction : public G4VUserDetectorConstruction
         this->heads = heads;
     };
 
+    void ZeroHistogram() {
+        this->sensitive_detector->ZeroHistogram();
+    }
+
+    pyublas::numpy_vector<float> GetHistogram() {
+        return this->sensitive_detector->GetHistogram();
+    };
+
   public:
     ParallelDetectorConstruction* parallel_detector;
 
