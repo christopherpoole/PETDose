@@ -28,6 +28,7 @@
 #include "DicomDataIO.hh"
 
 // GEANT4 //
+#include "globals.hh"
 #include "G4VUserPrimaryGeneratorAction.hh"
 #include "G4ParticleGun.hh"
 
@@ -56,6 +57,10 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
         activity = new G4VoxelArray<int16_t>(data);
         max_activity = activity->GetMaxValue();
         pet_origin = activity->GetOrigin() - offset;
+    };
+
+    void SetGunPosition(G4ThreeVector position) {
+        particle_gun->SetParticlePosition(position);
     };
 
   private:

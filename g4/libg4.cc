@@ -90,6 +90,7 @@ BOOST_PYTHON_MODULE(libg4) {
         bases<G4VUserPrimaryGeneratorAction>, boost::noncopyable>
         ("PrimaryGeneratorAction", "PrimaryGeneratorAction")
         .def("LoadActivityData", &PrimaryGeneratorAction::LoadActivityData)
+        .def("SetGunPosition", &PrimaryGeneratorAction::SetGunPosition)
         ;   // End PrimaryGeneratorAction
 }
 
