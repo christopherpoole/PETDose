@@ -42,21 +42,6 @@
 #include "G4PVPlacement.hh"
 
 
-// Simple data structure for setpoints in hounsfiled -> G4Material ramp
-class Hounsfield{
-  public:
-    Hounsfield(int value, G4String material_name, G4double density) {
-        this->value = value;
-        this->material_name = material_name;
-        this->density = density;
-    };
-
-  public:
-    G4int value;
-    G4String material_name;
-    G4double density;
-};
-
 
 class DetectorConstruction : public G4VUserDetectorConstruction
 {
@@ -66,26 +51,10 @@ class DetectorConstruction : public G4VUserDetectorConstruction
 
     G4VPhysicalVolume* Construct();
 
-    std::map<int16_t, G4Material*> MakeMaterialsMap(G4int increment);
-    G4Material* MakeNewMaterial(G4String base_material_name, G4double density);
-
   public:
     void SetParallelWorld(ParallelDetectorConstruction* parallel_detector) {
         this->parallel_detector = parallel_detector;
     };
-
-    void SetCTDirectory(G4String directory, G4int ct_acquistion) {
-        this->directory = directory;
-        this->ct_acquisition = ct_acquistion;
-
-        DicomDataIO* reader = new DicomDataIO(); 
-        reader->SetAcquisitionNumber(ct_acquisition); 
-         
-        G4VoxelData* data = reader->ReadDirectory(directory); 
-        array = new G4VoxelArray<int16_t>(data);
-        
-        ct_origin = array->GetOrigin();
-    }
 
     void SaveEnergyHistogram(G4String filename) {
         io->Write<double>(filename, scorer->GetEnergyHistogram()->GetData());
@@ -97,10 +66,6 @@ class DetectorConstruction : public G4VUserDetectorConstruction
 
     void SaveCountsHistogram(G4String filename) {
         io->Write<double>(filename, scorer->GetCountsHistogram()->GetData());
-    }
-
-    G4ThreeVector GetCTOrigin() {
-        return this->ct_origin;
     }
 
     void SetRadius(G4double radius) {
@@ -159,16 +124,6 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     G4int heads;   
 
     SensitiveDetector* sensitive_detector;
- 
-    NumpyDataIO* io;
-    G4VoxelDetector<double>* scorer;
-    std::vector<Hounsfield> hounsfield;
-    
-    G4VoxelArray<int16_t>* array;
-    
-    G4String directory;
-    G4int ct_acquisition;
-    G4ThreeVector ct_origin;
 };
 
 #endif

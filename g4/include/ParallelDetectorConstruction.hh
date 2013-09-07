@@ -37,6 +37,22 @@
 #include "G4PVParameterised.hh"
 
 
+// Simple data structure for setpoints in hounsfiled -> G4Material ramp
+class Hounsfield{
+  public:
+    Hounsfield(int value, G4String material_name, G4double density) {
+        this->value = value;
+        this->material_name = material_name;
+        this->density = density;
+    };
+
+  public:
+    G4int value;
+    G4String material_name;
+    G4double density;
+};
+
+
 class ParallelDetectorConstruction : public G4VUserParallelWorld
 {
   public:
@@ -44,14 +60,43 @@ class ParallelDetectorConstruction : public G4VUserParallelWorld
     ~ParallelDetectorConstruction();
 
     void Construct();
-  
+
+  public:
+    void SetCTDirectory(G4String directory, G4int ct_acquistion) {
+        this->directory = directory;
+        this->ct_acquisition = ct_acquistion;
+
+        DicomDataIO* reader = new DicomDataIO(); 
+        reader->SetAcquisitionNumber(ct_acquisition); 
+         
+        G4VoxelData* data = reader->ReadDirectory(directory); 
+        array = new G4VoxelArray<int16_t>(data);
+        
+        ct_origin = array->GetOrigin();
+    }
+
+    G4ThreeVector GetCTOrigin() {
+        return this->ct_origin;
+    }
+
+
+    
   private:
     G4Box* world_solid;
     G4LogicalVolume* world_logical;
     G4VPhysicalVolume* world_physical;
   
   public:
+    NumpyDataIO* io;
     G4VoxelDetector<double>* scorer;
+    G4VoxelArray<int16_t>* array;
+    
+    std::vector<Hounsfield> hounsfield;
+
+    G4String directory;
+    G4int ct_acquisition;
+    G4ThreeVector ct_origin;
 };
+
 #endif
 
