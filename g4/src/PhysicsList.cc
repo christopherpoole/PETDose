@@ -33,6 +33,13 @@
 #include "G4DecayPhysics.hh"
 #include "G4RadioactiveDecayPhysics.hh"
 
+#include "G4ProcessManager.hh"
+#include "G4ProcessVector.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4ParallelWorldProcess.hh"
+#include "G4ChargedGeantino.hh"
+
+
 
 PhysicsList::PhysicsList()
 {
@@ -58,6 +65,28 @@ void PhysicsList::ConstructParticle()
 void PhysicsList::ConstructProcess()
 {
     AddTransportation();
+
+    G4ParallelWorldProcess* parallel_world_process =
+        new G4ParallelWorldProcess("parallel world process");
+    parallel_world_process->SetParallelWorld("parallel world");
+    parallel_world_process->SetLayeredMaterialFlag();
+
+    theParticleIterator->reset();
+    while((*theParticleIterator)()) {
+        G4ParticleDefinition* particle = theParticleIterator->value();
+        
+        if(particle!=G4ChargedGeantino::Definition()) {
+            G4ProcessManager* pmanager = particle->GetProcessManager();
+            pmanager->AddProcess(parallel_world_process);
+            
+            if(parallel_world_process->IsAtRestRequired(particle)) {
+                pmanager->SetProcessOrdering(parallel_world_process, idxAtRest, 9999);
+            }
+            
+            pmanager->SetProcessOrdering(parallel_world_process, idxAlongStep, 1);
+            pmanager->SetProcessOrdering(parallel_world_process, idxPostStep, 9999);
+        }
+    }
 
     standard_physics->ConstructProcess();
     decay_physics->ConstructProcess();
