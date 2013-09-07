@@ -44,6 +44,8 @@ ParallelDetectorConstruction::ParallelDetectorConstruction()
     hounsfield.push_back(Hounsfield(-700,"G4_LUNG_ICRP", 0.302));
     hounsfield.push_back(Hounsfield(125,"G4_TISSUE_SOFT_ICRP", 1.101));
     hounsfield.push_back(Hounsfield(2500,"G4_BONE_CORTICAL_ICRP", 2.088));
+
+    io = new NumpyDataIO();
 }
 
 ParallelDetectorConstruction::~ParallelDetectorConstruction()
@@ -61,7 +63,7 @@ void ParallelDetectorConstruction::Construct()
     std::map<int16_t, G4Material*> materials = MakeMaterialsMap(increment);
 
     G4VoxelDataParameterisation<int16_t>* voxeldata_param =
-        new G4VoxelDataParameterisation<int16_t>(array, materials, phantom_physical);
+        new G4VoxelDataParameterisation<int16_t>(array, materials, world_physical);
 
     G4RotationMatrix* rotation = new G4RotationMatrix();
 
@@ -100,7 +102,7 @@ void ParallelDetectorConstruction::Construct()
 }
 
 
-std::map<int16_t, G4Material*> DetectorConstruction::MakeMaterialsMap(G4int increment) {
+std::map<int16_t, G4Material*> ParallelDetectorConstruction::MakeMaterialsMap(G4int increment) {
     // Our materials map or ramp
     std::map<int16_t, G4Material*> ramp;
 
@@ -125,7 +127,7 @@ std::map<int16_t, G4Material*> DetectorConstruction::MakeMaterialsMap(G4int incr
 }
 
 
-G4Material* DetectorConstruction::MakeNewMaterial(G4String base_material_name, G4double density) {
+G4Material* ParallelDetectorConstruction::MakeNewMaterial(G4String base_material_name, G4double density) {
     G4NistManager* nist_manager = G4NistManager::Instance();
     G4String new_name = base_material_name + G4UIcommand::ConvertToString(density);
 

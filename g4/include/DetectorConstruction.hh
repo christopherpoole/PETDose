@@ -57,15 +57,15 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     };
 
     void SaveEnergyHistogram(G4String filename) {
-        io->Write<double>(filename, scorer->GetEnergyHistogram()->GetData());
+        this->parallel_detector->SaveEnergyHistogram(filename); 
     }
 
     void SaveEnergySqHistogram(G4String filename) {
-        io->Write<double>(filename, scorer->GetEnergySqHistogram()->GetData());
+        this->parallel_detector->SaveEnergySqHistogram(filename); 
     }
 
     void SaveCountsHistogram(G4String filename) {
-        io->Write<double>(filename, scorer->GetCountsHistogram()->GetData());
+        this->parallel_detector->SaveCountsHistogram(filename); 
     }
 
     void SetRadius(G4double radius) {
@@ -94,6 +94,14 @@ class DetectorConstruction : public G4VUserDetectorConstruction
         this->heads = heads;
     };
 
+    void SetCTDirectory(G4String directory, G4int ct_acquisition) {
+        this->parallel_detector->SetCTDirectory(directory, ct_acquisition);
+    };
+
+    G4ThreeVector GetCTOrigin() {
+        return this->parallel_detector->GetCTOrigin();
+    };
+
     void ZeroHistogram() {
         this->sensitive_detector->ZeroHistogram();
     }
@@ -112,7 +120,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     G4Box* phantom_solid;
     G4LogicalVolume* phantom_logical;
     G4VPhysicalVolume* phantom_physical;
-
+ 
     GantryParameterisation* gantry_param;
     G4double radius;
     G4double crystal_length;

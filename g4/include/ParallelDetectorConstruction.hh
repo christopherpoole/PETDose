@@ -25,6 +25,8 @@
 // G4VoxelData//
 #include "G4VoxelData.hh"
 #include "G4VoxelArray.hh"
+#include "DicomDataIO.hh"
+#include "NumpyDataIO.hh"
 #include "G4VoxelDetector.hh"
 
 // GEANT4 //
@@ -61,6 +63,9 @@ class ParallelDetectorConstruction : public G4VUserParallelWorld
 
     void Construct();
 
+    std::map<int16_t, G4Material*> MakeMaterialsMap(G4int increment);
+    G4Material* MakeNewMaterial(G4String base_material_name, G4double density);
+
   public:
     void SetCTDirectory(G4String directory, G4int ct_acquistion) {
         this->directory = directory;
@@ -79,13 +84,23 @@ class ParallelDetectorConstruction : public G4VUserParallelWorld
         return this->ct_origin;
     }
 
+    void SaveEnergyHistogram(G4String filename) {
+        io->Write<double>(filename, scorer->GetEnergyHistogram()->GetData());
+    }
 
-    
+    void SaveEnergySqHistogram(G4String filename) {
+        io->Write<double>(filename, scorer->GetEnergySqHistogram()->GetData());
+    }
+
+    void SaveCountsHistogram(G4String filename) {
+        io->Write<double>(filename, scorer->GetCountsHistogram()->GetData());
+    }
+
   private:
     G4Box* world_solid;
     G4LogicalVolume* world_logical;
     G4VPhysicalVolume* world_physical;
-  
+ 
   public:
     NumpyDataIO* io;
     G4VoxelDetector<double>* scorer;
