@@ -51,13 +51,14 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     world_logical = new G4LogicalVolume(world_solid, air, "world_logical", 0, 0, 0);
     world_physical = new G4PVPlacement(0, G4ThreeVector(), world_logical, 
                                        "world_physical", 0, false, 0);
-    //world_logical->SetVisAttributes(G4VisAttributes::Invisible);
+    world_logical->SetVisAttributes(G4VisAttributes::Invisible);
     world_logical->SetUserLimits(new G4UserLimits(5*mm));
 
     phantom_solid = new G4Box("phantom_solid", 1.0*m, 1.0*m, 1.0*m);
     phantom_logical = new G4LogicalVolume(phantom_solid, air, "phantom_logical", 0, 0, 0);
     phantom_physical = new G4PVPlacement(0, G4ThreeVector(), phantom_logical, 
                                        "phantom_physical", world_logical, false, 0);
+    phantom_logical->SetVisAttributes(G4VisAttributes::Invisible);
     
     gantry_param = new GantryParameterisation(phantom_physical);
     gantry_param->SetRadius(radius);
