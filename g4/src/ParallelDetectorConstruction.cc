@@ -57,6 +57,8 @@ void ParallelDetectorConstruction::Construct()
 {
     G4cout << "constructing parallel world" << G4endl;
 
+    world_physical = GetWorld();
+
     // Make a mapping between the data in array and G4Materials
     // at increaments of 25 HU.
     G4int increment = 25;
@@ -66,11 +68,12 @@ void ParallelDetectorConstruction::Construct()
         new G4VoxelDataParameterisation<int16_t>(array, materials, world_physical);
 
     G4RotationMatrix* rotation = new G4RotationMatrix();
+    rotation->rotateY(90*deg); 
 
     voxeldata_param->Construct(G4ThreeVector(), rotation);
     voxeldata_param->SetRounding(25, -1000, 2000);
-    voxeldata_param->ShowMidPlanes();
-    voxeldata_param->ShowZPlanes(15, 0); // every 15th slice
+    //voxeldata_param->ShowMidPlanes();
+    //voxeldata_param->ShowZPlanes(15, 0); // every 15th slice
     /*
     std::map<int16_t, G4Colour*> colours;
     for (int i=-2500; i<5000; i++) {
@@ -88,8 +91,8 @@ void ParallelDetectorConstruction::Construct()
         colours[i] = new G4Colour(gray, gray, gray, alpha);
     }
     voxeldata_param->SetColourMap(colours);
-    voxeldata_param->SetVisibility(false);
-
+    //voxeldata_param->SetVisibility(false);
+    
     scorer = new G4VoxelDetector<double>("detector",
             G4ThreeVector(201, 201, 201), G4ThreeVector(10*mm, 10*mm, 10*mm));
     scorer->SetDebug(false);
