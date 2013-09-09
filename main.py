@@ -25,6 +25,9 @@ import Geant4
 import g4 
 
 import dicom
+import numpy
+import pyublas
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -63,10 +66,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     detector_construction = g4.DetectorConstruction()
-    #g4.RegisterParallelWorld(detector_construction)
-
-    if args.dicom:
-        detector_construction.SetCTDirectory(args.dicom, args.ct_acquisition)
 
     # Setup PET gantry.
     detector_construction.SetRadius(args.radius)
@@ -82,10 +81,9 @@ if __name__ == "__main__":
     physics_list.RegisterPhysics(g4.StepLimiterBuilder())
     Geant4.gRunManager.SetUserInitialization(physics_list)
 
+  
     primary_generator = g4.PrimaryGeneratorAction()
     primary_generator.SetGunPosition(0, 0, 0);
-    if args.dicom:
-        primary_generator.LoadActivityData(args.dicom, detector_construction.GetCTOrigin())
     Geant4.gRunManager.SetUserAction(primary_generator)
 
     event_action = g4.EventAction()
@@ -99,6 +97,11 @@ if __name__ == "__main__":
     seed = random.randint(0, 2**32)
     Geant4.HepRandom.setTheSeed(seed)
 
+    if args.dicom:
+        g4.RegisterParallelWorld(detector_construction, physics_list)
+        detector_construction.SetCTDirectory(args.dicom, args.ct_acquisition)
+        #primary_generator.LoadActivityData(args.dicom, detector_construction.GetCTOrigin())
+   
     Geant4.gRunManager.Initialize()
     
     if args.macro:
@@ -111,12 +114,9 @@ if __name__ == "__main__":
         Geant4.StartUISession()
 
     if args.save:
-        detector_construction.SaveEnergyHistogram("output/energy_%i.npy" % args.run_id)
-        detector_construction.SaveCountsHistogram("output/counts_%i.npy" % args.run_id)
+        hist = detector_construction.GetHistogram()
+        numpy.save("output/hist.npy", hist)
 
-        stepping_action.SaveMomentumHistogram("output/momentum_%i.npy" % args.run_id)
-        stepping_action.SaveStepsHistogram("output/steps_%i.npy" % args.run_id)
-
-    if not args.start_session:
-        raw_input("Press <enter> to exit.")
+    #if not args.start_session:
+    #    raw_input("Press <enter> to exit.")
 
