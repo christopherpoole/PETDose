@@ -52,6 +52,9 @@ PhysicsList::PhysicsList()
     decay_physics = new G4DecayPhysics();
     radioactive_physics = new G4RadioactiveDecayPhysics();
     standard_physics = new G4EmStandardPhysics_option2();
+
+    using_parallel_world = false;
+    parallel_world_name = "";
 }
 
 PhysicsList::~PhysicsList()
@@ -66,25 +69,27 @@ void PhysicsList::ConstructProcess()
 {
     AddTransportation();
 
-    G4ParallelWorldProcess* parallel_world_process =
-        new G4ParallelWorldProcess("parallel world process");
-    parallel_world_process->SetParallelWorld("parallel world");
-    parallel_world_process->SetLayeredMaterialFlag();
+    if (using_parallel_world) {
+        G4ParallelWorldProcess* parallel_world_process =
+            new G4ParallelWorldProcess("parallel world process");
+        parallel_world_process->SetParallelWorld(parallel_world_name);
+        parallel_world_process->SetLayeredMaterialFlag();
 
-    theParticleIterator->reset();
-    while((*theParticleIterator)()) {
-        G4ParticleDefinition* particle = theParticleIterator->value();
-        
-        if(particle!=G4ChargedGeantino::Definition()) {
-            G4ProcessManager* pmanager = particle->GetProcessManager();
-            pmanager->AddProcess(parallel_world_process);
+        theParticleIterator->reset();
+        while((*theParticleIterator)()) {
+            G4ParticleDefinition* particle = theParticleIterator->value();
             
-            if(parallel_world_process->IsAtRestRequired(particle)) {
-                pmanager->SetProcessOrdering(parallel_world_process, idxAtRest, 9999);
+            if(particle!=G4ChargedGeantino::Definition()) {
+                G4ProcessManager* pmanager = particle->GetProcessManager();
+                pmanager->AddProcess(parallel_world_process);
+                
+                if(parallel_world_process->IsAtRestRequired(particle)) {
+                    pmanager->SetProcessOrdering(parallel_world_process, idxAtRest, 9999);
+                }
+                
+                pmanager->SetProcessOrdering(parallel_world_process, idxAlongStep, 1);
+                pmanager->SetProcessOrdering(parallel_world_process, idxPostStep, 9999);
             }
-            
-            pmanager->SetProcessOrdering(parallel_world_process, idxAlongStep, 1);
-            pmanager->SetProcessOrdering(parallel_world_process, idxPostStep, 9999);
         }
     }
 

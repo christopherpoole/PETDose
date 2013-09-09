@@ -38,10 +38,23 @@ class PhysicsList: public G4VModularPhysicsList
     void ConstructProcess();
     void SetCuts();
 
+  public:
+    void UsingParallelWorld(bool flag) {
+        this->using_parallel_world = flag;
+    };
+
+    void SetParallelWorldName(G4String name) {
+        this->parallel_world_name = name;
+        UsingParallelWorld(true);
+    };
+
   private:
     G4VPhysicsConstructor* decay_physics;
     G4VPhysicsConstructor* radioactive_physics;
     G4VPhysicsConstructor* standard_physics;
+
+    G4bool using_parallel_world;
+    G4String parallel_world_name;
 };
 
 #endif

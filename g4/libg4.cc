@@ -37,10 +37,12 @@
 using namespace boost::python;
 
 
-void RegisterParallelWorld(DetectorConstruction* detector) {
+void RegisterParallelWorld(DetectorConstruction* detector, PhysicsList* physics_list) {
     ParallelDetectorConstruction* parallel_detector = new ParallelDetectorConstruction();
     detector->RegisterParallelWorld(parallel_detector);
     detector->SetParallelWorld(parallel_detector);
+
+    physics_list->SetParallelWorldName("parallel world");
 }
 
 
