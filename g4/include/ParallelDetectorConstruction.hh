@@ -76,6 +76,8 @@ class ParallelDetectorConstruction : public G4VUserParallelWorld
          
         G4VoxelData* data = reader->ReadDirectory(directory); 
         array = new G4VoxelArray<int16_t>(data);
+
+        array->Merge(4, 4, 4);
         
         ct_origin = array->GetOrigin();
     }
