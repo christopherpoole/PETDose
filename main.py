@@ -52,6 +52,10 @@ if __name__ == "__main__":
     parser.add_argument('--pet_acquisition', type=int, default=-1,
             help='Set the PET acquisition to load, -1 for all.')
 
+    parser.add_argument('--gun_x', type=float, default=0.0)
+    parser.add_argument('--gun_y', type=float, default=0.0)
+    parser.add_argument('--gun_z', type=float, default=0.0)
+
     parser.add_argument('--histories', type=int, default=0,
             help='Set the number of initial histories for this run.')
     parser.add_argument('--run_id', type=int, default=0,
@@ -81,16 +85,15 @@ if __name__ == "__main__":
     physics_list.RegisterPhysics(g4.StepLimiterBuilder())
     Geant4.gRunManager.SetUserInitialization(physics_list)
 
-  
     primary_generator = g4.PrimaryGeneratorAction()
-    primary_generator.SetGunPosition(0, 0, 0);
+    primary_generator.SetGunPosition(args.gun_x, args.gun_y, args.gun_z);
     Geant4.gRunManager.SetUserAction(primary_generator)
 
-    event_action = g4.EventAction()
-    Geant4.gRunManager.SetUserAction(event_action)
+    #event_action = g4.EventAction()
+    #Geant4.gRunManager.SetUserAction(event_action)
 
-    stepping_action = g4.SteppingAction()
-    Geant4.gRunManager.SetUserAction(stepping_action)
+    #stepping_action = g4.SteppingAction()
+    #Geant4.gRunManager.SetUserAction(stepping_action)
 
     rand_engine= Geant4.Ranlux64Engine()
     Geant4.HepRandom.setTheEngine(rand_engine)
@@ -115,7 +118,7 @@ if __name__ == "__main__":
 
     if args.save:
         hist = detector_construction.GetHistogram()
-        numpy.save("output/hist.npy", hist)
+        numpy.save("output/hist_%i_%i_%i.npy" % (args.gun_x, args.gun_y, args.gun_z), hist)
 
     #if not args.start_session:
     #    raw_input("Press <enter> to exit.")
