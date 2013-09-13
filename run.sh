@@ -12,4 +12,4 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib
 
 cd /media/nfsroot/software/PETDose
 
-python -B main.py --run_id=$PBS_ARRAYID --radius=421 --width=3 --length=10 --crystals_phi=1 --crystals_axis=118 --heads=672 --histories=10000 --dicom=/media/nfsroot/software/PETDose/data --ct_acquisition=2 --save=True --gun_x=$gunx --gun_y=$guny --gun_z=$gunz
+python -B main.py --run_id=$PBS_ARRAYID --radius=400 --width=5 --length=10 --crystals_phi=1 --crystals_axis=100 --heads=360 --histories=10000 --dicom=/media/nfsroot/software/PETDose/data --ct_acquisition=2 --save=True --gun_x=$gunx --gun_y=$guny --gun_z=$gunz
